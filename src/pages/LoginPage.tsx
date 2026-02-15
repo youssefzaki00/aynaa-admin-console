@@ -1,18 +1,39 @@
 import { useState } from "react";
-import { Shield, KeyRound } from "lucide-react";
+import { Shield, User, Lock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { login } from "@/services/api";
+import { toast } from "sonner";
 
 interface LoginPageProps {
-  onLogin: (key: string) => void;
+  onLogin: (token: string) => void;
 }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
-  const [key, setKey] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (key.trim()) onLogin(key.trim());
+    if (!username.trim() || !password.trim()) return;
+
+    setIsLoading(true);
+    try {
+      const response = await login({ username, password });
+      // Assuming response structure matches { data: { token: string } } based on docs
+      if (response.data && response.data.token) {
+        onLogin(response.data.token);
+        toast.success("Welcome back!");
+      } else {
+        throw new Error("Invalid response from server");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to login");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -21,21 +42,42 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         <div className="text-center">
           <Shield className="h-10 w-10 text-primary mx-auto mb-3" />
           <h1 className="text-xl font-semibold text-foreground">Wekayaa Admin</h1>
-          <p className="text-sm text-muted-foreground mt-1">Enter your admin key to continue</p>
+          <p className="text-sm text-muted-foreground mt-1">Sign in to manage the application</p>
         </div>
         <div className="space-y-3">
           <div className="relative">
-            <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              type="password"
-              placeholder="Admin key"
-              value={key}
-              onChange={(e) => setKey(e.target.value)}
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="pl-10"
+              disabled={isLoading}
+              required
             />
           </div>
-          <Button type="submit" className="w-full" disabled={!key.trim()}>
-            Sign In
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pl-10"
+              disabled={isLoading}
+              required
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={isLoading || !username.trim() || !password.trim()}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Signing in...
+              </>
+            ) : (
+              "Sign In"
+            )}
           </Button>
         </div>
       </form>

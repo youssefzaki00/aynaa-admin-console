@@ -43,5 +43,5 @@ export const keywordsService = {
     apiRequest<KeywordResponse>(`/admin/keywords/${id}/toggle`, { method: "PATCH" }),
 
   delete: (id: string) =>
-    apiRequest<{ success: boolean; message: string }>(`/admin/keywords/${id}`, { method: "DELETE" }),
+    apiRequest<{ success: boolean; message: string; data: { deletedKeyword: { id: string; word: string } } }>(`/admin/keywords/${id}`, { method: "DELETE" }),
 };

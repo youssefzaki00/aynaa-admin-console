@@ -23,7 +23,7 @@ export interface SuggestionsResponse {
 
 export const suggestionsService = {
   getAll: (params?: { status?: string; type?: string; page?: number; limit?: number }) =>
-    apiRequest<SuggestionsResponse>("/admin/suggestions", { params: params as Record<string, string | number | boolean | undefined> }),
+    apiRequest<SuggestionsResponse>("/suggestions/admin", { params: params as Record<string, string | number | boolean | undefined> }),
 
   review: (id: string, body: { status: "APPROVED" | "REJECTED" }) =>
     apiRequest<{ success: boolean; message: string }>(`/admin/suggestions/review/${id}`, { method: "PATCH", body }),

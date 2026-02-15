@@ -1,29 +1,45 @@
-const BASE_URL = "https://api.wekayaa.com/api/v1";
+const BASE_URL = import.meta.env.VITE_API_URL || "https://api.wekayaa.com/api/v1";
 
-function getAdminKey(): string {
-  return localStorage.getItem("wekayaa_admin_key") || "";
+export function getToken(): string | null {
+  return localStorage.getItem("wekayaa_admin_token");
 }
 
-export function setAdminKey(key: string) {
-  localStorage.setItem("wekayaa_admin_key", key);
+export function setToken(token: string) {
+  localStorage.setItem("wekayaa_admin_token", token);
 }
 
-export function getStoredAdminKey(): string {
-  return getAdminKey();
+export function clearToken() {
+  localStorage.removeItem("wekayaa_admin_token");
 }
 
-export function clearAdminKey() {
-  localStorage.removeItem("wekayaa_admin_key");
+// Keep legacy key functions if needed elsewhere, but they are likely obsolete.
+// Removing them to clean up as per new docs.
+export function isAuthenticated(): boolean {
+  return !!getToken();
 }
 
 interface RequestOptions {
   method?: string;
   body?: unknown;
   params?: Record<string, string | number | boolean | undefined>;
+  headers?: Record<string, string>;
+}
+
+export async function login(credentials: { username: string; password: string }) {
+  const res = await fetch(`${BASE_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+  const data = await res.json();
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || "Login failed");
+  }
+  return data;
 }
 
 export async function apiRequest<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-  const { method = "GET", body, params } = options;
+  const { method = "GET", body, params, headers = {} } = options;
 
   let url = `${BASE_URL}${endpoint}`;
 
@@ -38,20 +54,30 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
     if (qs) url += `?${qs}`;
   }
 
-  const headers: Record<string, string> = {
+  const token = getToken();
+  const authHeaders: Record<string, string> = {
     "Content-Type": "application/json",
-    "x-admin-key": getAdminKey(),
+    ...headers,
   };
+
+  if (token) {
+    authHeaders["Authorization"] = `Bearer ${token}`;
+  }
 
   const res = await fetch(url, {
     method,
-    headers,
+    headers: authHeaders,
     body: body ? JSON.stringify(body) : undefined,
   });
 
   const data = await res.json();
 
   if (!res.ok || !data.success) {
+    // Handle 401 Unauthorized globally if needed (e.g. clear token)
+    if (res.status === 401) {
+      clearToken();
+      // Optional: Redirect to login or notify app state
+    }
     throw new Error(data.message || "Request failed");
   }
 

@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
-import { getStoredAdminKey, setAdminKey, clearAdminKey } from "@/services/api";
+import { getToken, setToken, clearToken } from "@/services/api";
 
 export function useAuth() {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!getStoredAdminKey());
+  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
 
   useEffect(() => {
-    setIsAuthenticated(!!getStoredAdminKey());
+    setIsAuthenticated(!!getToken());
   }, []);
 
-  const login = (key: string) => {
-    setAdminKey(key);
+  const login = (token: string) => {
+    setToken(token);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
-    clearAdminKey();
+    clearToken();
     setIsAuthenticated(false);
   };
 

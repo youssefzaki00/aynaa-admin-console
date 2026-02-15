@@ -45,7 +45,16 @@ export default function WhitelistPage() {
   if (isLoading) return <LoadingState />;
   if (error) return <ErrorState message={(error as Error).message} />;
 
-  const apps = data?.data.whitelist ?? [];
+  // Fallback to packageName if id is missing (backend issue)
+  const whitelistData = data?.data.whitelist ?? [];
+  const apps = Array.isArray(whitelistData)
+    ? whitelistData
+        .filter((app): app is WhitelistApp => !!app && !!(app.id || app.packageName))
+        .map(app => ({
+          ...app,
+          id: app.id || app.packageName
+        }))
+    : [];
   const pagination = data?.data.pagination;
 
   return (

@@ -35,5 +35,5 @@ export const whitelistService = {
     apiRequest<WhitelistAppResponse>(`/admin/whitelist/${id}`, { method: "PATCH", body }),
 
   remove: (id: string) =>
-    apiRequest<{ success: boolean; message: string }>(`/admin/whitelist/${id}`, { method: "DELETE" }),
+    apiRequest<{ success: boolean; message: string; data: { deletedApp: { id: string; packageName: string; appName: string } } }>(`/admin/whitelist/${id}`, { method: "DELETE" }),
 };
