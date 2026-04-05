@@ -26,7 +26,7 @@ interface RequestOptions {
 }
 
 export async function login(credentials: { username: string; password: string }) {
-  const res = await fetch(`${BASE_URL}/auth/login`, {
+  const res = await fetch(`${BASE_URL}/auth/login?role=admin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),

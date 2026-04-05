@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { Pagination as PaginationType } from "@/services/categories";
 

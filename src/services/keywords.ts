@@ -8,6 +8,10 @@ export interface Keyword {
     id: string;
     name: string;
     displayName: string;
+    description: string;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
   };
   isEnabled: boolean;
   createdAt: string;
@@ -31,17 +35,17 @@ export interface KeywordResponse {
 
 export const keywordsService = {
   getAll: (params?: { page?: number; limit?: number; categoryId?: string; isEnabled?: boolean }) =>
-    apiRequest<KeywordsResponse>("/admin/keywords", { params: params as Record<string, string | number | boolean | undefined> }),
+    apiRequest<KeywordsResponse>("/keywords", { params: params as Record<string, string | number | boolean | undefined> }),
 
   create: (body: { word: string; categoryId: string }) =>
-    apiRequest<KeywordResponse>("/admin/keywords", { method: "POST", body }),
+    apiRequest<KeywordResponse>("/keywords", { method: "POST", body }),
 
   update: (id: string, body: { word?: string; categoryId?: string }) =>
-    apiRequest<KeywordResponse>(`/admin/keywords/${id}`, { method: "PATCH", body }),
+    apiRequest<KeywordResponse>(`/keywords/${id}`, { method: "PATCH", body }),
 
   toggle: (id: string) =>
-    apiRequest<KeywordResponse>(`/admin/keywords/${id}/toggle`, { method: "PATCH" }),
+    apiRequest<KeywordResponse>(`/keywords/${id}/toggle`, { method: "PATCH" }),
 
   delete: (id: string) =>
-    apiRequest<{ success: boolean; message: string; data: { deletedKeyword: { id: string; word: string } } }>(`/admin/keywords/${id}`, { method: "DELETE" }),
+    apiRequest<{ success: boolean; message: string; data: { deletedKeyword: { id: string; word: string } } }>(`/keywords/${id}`, { method: "DELETE" }),
 };

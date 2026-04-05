@@ -42,8 +42,8 @@ export interface UninstallReviewResponse {
 
 export const uninstallService = {
   getAll: (params?: { status?: string; page?: number; limit?: number }) =>
-    apiRequest<UninstallResponse>("/admin/uninstall/requests", { params: params as Record<string, string | number | boolean | undefined> }),
+    apiRequest<UninstallResponse>("/uninstall/admin/requests", { params: params as Record<string, string | number | boolean | undefined> }),
 
   review: (id: string, body: { status: "APPROVED" | "REJECTED"; adminNote?: string }) =>
-    apiRequest<UninstallReviewResponse>(`/admin/uninstall/review/${id}`, { method: "PATCH", body }),
+    apiRequest<UninstallReviewResponse>(`/uninstall/admin/review/${id}`, { method: "PATCH", body }),
 };
