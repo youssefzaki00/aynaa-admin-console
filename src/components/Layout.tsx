@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import navItems from "@/config/common/sidebar.config";
 import { LogOut } from "lucide-react";
+import { VERSION } from "@/config/common/version";
 
 interface LayoutProps {
   children: ReactNode;
@@ -55,7 +56,10 @@ export default function Layout({ children, onLogout }: LayoutProps) {
           })}
         </nav>
         
-        <div className="p-4 border-t border-border/50">
+        <div className="p-4 border-t border-border/50 space-y-2">
+          <div className="text-xs text-muted-foreground text-center">
+            v{VERSION}
+          </div>
           <button
             onClick={onLogout}
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-muted-foreground hover:bg-destructive/10 hover:text-destructive w-full transition-all duration-200 hover:translate-x-1"

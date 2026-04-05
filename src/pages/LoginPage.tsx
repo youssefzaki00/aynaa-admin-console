@@ -5,6 +5,7 @@ import AuthLayout from "@/components/AuthLayout";
 import IconInput from "@/components/IconInput";
 import PasswordInput from "@/components/PasswordInput";
 import { useLogin } from "@/hooks/useAuth";
+import { VERSION } from "@/config/common/version";
 
 interface LoginPageProps {
   onLogin: (token: string) => void;
@@ -28,6 +29,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         </div>
         <h1 className="text-3xl font-bold text-foreground mb-2">Aynaa Admin</h1>
         <p className="text-sm text-muted-foreground">Sign in to manage the application</p>
+        <p className="text-xs text-muted-foreground mt-1">v{VERSION}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
