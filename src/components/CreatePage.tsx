@@ -54,6 +54,9 @@ export interface PageConfig<TRow extends { id: string }> {
     overrideData?: TRow[];
     transformEditData?: (item: TRow) => any;
   };
+
+  /** Full list: no server/table paging; header badge shows loaded row count. */
+  listMode?: "paginated" | "full";
 }
 
 interface CreatePageProps<TRow extends { id: string }> {
@@ -126,6 +129,7 @@ export default function CreatePage<TRow extends { id: string }>({
   );
 
   const pagination: Pagination | undefined = useMemo(() => {
+    if (config.listMode === "full") return undefined;
     const p = rawData?.data?.pagination ?? rawData?.pagination;
     if (!p) return undefined;
     return {
@@ -134,7 +138,7 @@ export default function CreatePage<TRow extends { id: string }>({
       limit: p.limit ?? 20,
       totalPages: p.totalPages ?? p.pages ?? 1,
     };
-  }, [rawData]);
+  }, [rawData, config.listMode]);
 
   const management = useCrudManager<TRow, any>({
     data: finalData,
@@ -171,6 +175,10 @@ export default function CreatePage<TRow extends { id: string }>({
       searchValue={management.searchValue}
       onSearchChange={management.onSearchChange}
       action={action}
+      headerTotal={
+        config.listMode === "full" ? finalData.length : undefined
+      }
+      hideTablePagination={config.listMode === "full"}
     >
       {children}
     </DataPageLayout>

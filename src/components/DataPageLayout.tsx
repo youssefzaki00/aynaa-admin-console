@@ -23,6 +23,9 @@ interface DataPageLayoutProps<T extends { id: string }> {
   onSearchChange?: (value: string) => void;
   filterPanel?: React.ReactNode;
   action?: React.ReactNode;
+  /** When set, PageHeader badge uses this count instead of pagination.total. */
+  headerTotal?: number;
+  hideTablePagination?: boolean;
 }
 
 export default function DataPageLayout<T extends { id: string }>({
@@ -44,6 +47,8 @@ export default function DataPageLayout<T extends { id: string }>({
   onSearchChange,
   filterPanel,
   action,
+  headerTotal,
+  hideTablePagination,
 }: DataPageLayoutProps<T>) {
   const isServerSide = !!pagination && !!onPageChange;
 
@@ -64,11 +69,12 @@ export default function DataPageLayout<T extends { id: string }>({
             onSearchChange={onSearchChange}
             onAdd={onAdd}
             addLabel={addLabel}
-            total={pagination?.total}
+            total={headerTotal ?? pagination?.total}
             filterPanel={filterPanel}
             action={action}
           />
         }
+        hidePagination={hideTablePagination}
         serverSide={isServerSide}
         serverTotalPages={pagination?.totalPages}
         serverCurrentPage={currentPage}

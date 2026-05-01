@@ -11,7 +11,8 @@ import type { ExcludedApp } from "@/services/excluded-apps";
 
 const config: PageConfig<ExcludedApp> = {
   useQuery: (params) => useExcludedApps(params),
-  mapQueryParams: (page, search) => ({ page, limit: 50, search: search || undefined }),
+  mapQueryParams: (_page, search) => ({ search: search || undefined }),
+  listMode: "full",
   dataPath: (raw) => raw?.data?.excludedApps ?? [],
   useCreate: useCreateExcludedApp,
   useUpdate: useUpdateExcludedApp,

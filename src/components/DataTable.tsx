@@ -22,6 +22,8 @@ interface DataTableProps<T> {
   serverTotalPages?: number;
   serverCurrentPage?: number;
   onServerPageChange?: (page: number) => void;
+  /** When true (client mode), show all filtered rows and hide pagination footer. */
+  hidePagination?: boolean;
 }
 
 export default function DataTable<T>({
@@ -34,6 +36,7 @@ export default function DataTable<T>({
   serverTotalPages,
   serverCurrentPage,
   onServerPageChange,
+  hidePagination = false,
 }: DataTableProps<T>) {
   const [internalSearch, setInternalSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -57,13 +60,16 @@ export default function DataTable<T>({
         });
       });
 
-  const rows = serverSide
-    ? filtered
-    : filtered.slice((page - 1) * pageSize, page * pageSize);
+  const rows =
+    serverSide || hidePagination
+      ? filtered
+      : filtered.slice((page - 1) * pageSize, page * pageSize);
 
   const totalPages = serverSide
     ? (serverTotalPages ?? 1)
-    : Math.ceil(filtered.length / pageSize);
+    : hidePagination
+      ? 1
+      : Math.ceil(filtered.length / pageSize);
 
   const currentPage = serverSide ? (serverCurrentPage ?? 1) : page;
   const handlePageChange = serverSide
