@@ -94,11 +94,11 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
 
   const data = await res.json();
 
-  if (!res.ok || !data.success) {
-    // Handle 401 Unauthorized globally if needed (e.g. clear token)
+  // Throw on HTTP errors OR when the server explicitly sends `success: false`.
+  // Responses that omit `success` entirely (e.g. GET /admin/categories) are treated as OK.
+  if (!res.ok || data.success === false) {
     if (res.status === 401) {
       clearToken();
-      // Optional: Redirect to login or notify app state
     }
     throw new Error(data.message || "Request failed");
   }

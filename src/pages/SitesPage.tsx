@@ -1,15 +1,16 @@
 import CreatePage, { type PageConfig } from "@/components/CreatePage";
 import { useSites, useCreateSite, useUpdateSite, useDeleteSite } from "@/hooks/useSites";
+import { useSiteCustomSetup } from "@/hooks/use-site-setup";
 import { getSiteColumns } from "@/config/columns/sites.columns";
 import { Globe, Upload } from "lucide-react";
-import type { Site } from "@/services/sites";
+import { getSitesListFromResponse, type Site } from "@/services/sites";
 import { Button } from "@/ui/button";
 import { useDialog } from "@/lib/dialog-context";
 
 const config: PageConfig<Site> = {
   useQuery: (params) => useSites(params),
   mapQueryParams: (page, search) => ({ page, limit: 20, search: search || undefined }),
-  dataPath: (raw) => (Array.isArray(raw?.data?.sites) ? raw.data.sites : []),
+  dataPath: (response) => getSitesListFromResponse(response),
   useCreate: useCreateSite,
   useUpdate: useUpdateSite,
   useDelete: useDeleteSite,
@@ -21,6 +22,7 @@ const config: PageConfig<Site> = {
   },
   columnGenerator: getSiteColumns,
   filterDefaults: {},
+  useCustomSetup: useSiteCustomSetup,
 };
 
 export default function SitesPage() {

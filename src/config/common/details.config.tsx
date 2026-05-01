@@ -38,9 +38,17 @@ export function getDetailConfig(
         title: "Site Details",
         rows: [
           { label: "Status", value: data.isActive ? "Active" : "Inactive", variant: "status" },
-          { label: "URL", value: data.url },
           { label: "Name", value: data.name || "—" },
-          { label: "Category", value: data.category || "—" },
+          { label: "URL", value: data.url },
+          {
+            label: "Category",
+            value:
+              data.category?.displayName ??
+              data.category?.name ??
+              data.categoryId ??
+              "—",
+          },
+          ...(data.categoryId ? [{ label: "Category ID", value: data.categoryId }] : []),
           { label: "ID", value: data.id },
         ],
       };

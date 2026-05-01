@@ -37,7 +37,7 @@ export interface DeletedExcludedAppResponse {
 }
 
 export const excludedAppsService = {
-  getAll: (params?: { lastSync?: string; page?: number; limit?: number }) =>
+  getAll: (params?: { lastSync?: string; page?: number; limit?: number; search?: string }) =>
     apiRequest<ExcludedAppsResponse>("/excluded-apps", {
       params: params as Record<string, string | number | boolean | undefined>,
     }),

@@ -40,11 +40,15 @@ export const dialogRoutes: Record<DialogName, DialogRoute> = {
 
   "site-form": {
     component: "form",
-    getProps: (params) => ({
-      config: siteFormConfig,
-      editItem: params.editItem ?? null,
-      onSave: params.onSave ?? (() => {}),
-    }),
+    getProps: (params) => {
+      const { editItem, onSave, ...extraParams } = params;
+      return {
+        config: siteFormConfig,
+        editItem: editItem ?? null,
+        onSave: onSave ?? (() => {}),
+        extraParams,
+      };
+    },
   },
 
   "excluded-app-form": {

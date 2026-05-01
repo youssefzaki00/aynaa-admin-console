@@ -1,5 +1,6 @@
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
+import SearchableSelect from "@/components/SearchableSelect";
 import {
   Select,
   SelectContent,
@@ -36,6 +37,8 @@ export interface FormFieldConfig {
   populatedFrom?: string;
   optionsKey?: string;
   dir?: "ltr" | "rtl";
+  /** Passed to searchable-select CommandInput — wire to debounced API search. */
+  onRemoteSearch?: (query: string) => void;
 }
 
 export function FormField({ config }: { config: FormFieldConfig }) {
@@ -70,11 +73,10 @@ export function FormField({ config }: { config: FormFieldConfig }) {
       );
 
     case "select":
-    case "searchable-select":
       return (
         <Select
-          value={value}
-          onValueChange={onChange}
+          value={value !== undefined && value !== "" ? String(value) : undefined}
+          onValueChange={(v) => onChange?.(v)}
           disabled={disabled}
         >
           <SelectTrigger className="bg-background/50 border-border/50">
@@ -88,6 +90,18 @@ export function FormField({ config }: { config: FormFieldConfig }) {
             ))}
           </SelectContent>
         </Select>
+      );
+
+    case "searchable-select":
+      return (
+        <SearchableSelect
+          options={options}
+          value={value !== undefined && value !== "" ? String(value) : undefined}
+          onChange={(v) => onChange?.(v)}
+          placeholder={placeholder}
+          disabled={disabled}
+          onSearchChange={config.onRemoteSearch}
+        />
       );
 
     case "switch":

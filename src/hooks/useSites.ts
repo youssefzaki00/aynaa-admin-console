@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { sitesService } from "@/services/sites";
+import { sitesService, type SiteCreateBody, type SiteUpdateBody } from "@/services/sites";
 
 export function useSites(params?: { page?: number; limit?: number; search?: string }) {
   return useQuery({
@@ -11,17 +11,21 @@ export function useSites(params?: { page?: number; limit?: number; search?: stri
 export function useCreateSite() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: sitesService.create,
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["sites"] }); },
+    mutationFn: (body: SiteCreateBody) => sitesService.create(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sites"] });
+    },
   });
 }
 
 export function useUpdateSite() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { url?: string } }) =>
+    mutationFn: ({ id, data }: { id: string; data: SiteUpdateBody }) =>
       sitesService.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["sites"] }); },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sites"] });
+    },
   });
 }
 
@@ -29,7 +33,9 @@ export function useDeleteSite() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => sitesService.delete(id),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["sites"] }); },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sites"] });
+    },
   });
 }
 
@@ -37,6 +43,8 @@ export function useUploadSites() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: { file: File; categoryId: string }) => sitesService.upload(payload),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["sites"] }); },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sites"] });
+    },
   });
 }

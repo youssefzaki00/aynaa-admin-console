@@ -35,8 +35,13 @@ export default function FormFieldRenderer({
       defaultValue: editItem?.[field.name] ?? field.defaultValue,
       editItem,
       options: availableOptions,
+      ...(field.type === "searchable-select" &&
+      field.optionsKey === "categories" &&
+      typeof extraParams?.categoryRemoteSearch === "function"
+        ? { onRemoteSearch: extraParams.categoryRemoteSearch as (q: string) => void }
+        : {}),
     }),
-    [field, formState, editItem, availableOptions, onFieldChange],
+    [field, formState, editItem, availableOptions, onFieldChange, extraParams],
   );
 
   return (

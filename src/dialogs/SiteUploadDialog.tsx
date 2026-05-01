@@ -1,15 +1,11 @@
-import { useState, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import BaseDialog from "@/components/BaseDialog";
 import DialogActionButtons from "@/components/DialogActionButtons";
+import SearchableSelect from "@/components/SearchableSelect";
 import { Label } from "@/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/ui/select";
 import { useCategories } from "@/hooks/useCategories";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { getCategoriesList } from "@/services/categories";
 import { useUploadSites } from "@/hooks/useSites";
 import { Upload, FileText } from "lucide-react";
 
@@ -21,17 +17,31 @@ interface SiteUploadDialogProps {
 export default function SiteUploadDialog({ open, onClose }: SiteUploadDialogProps) {
   const [file, setFile] = useState<File | null>(null);
   const [categoryId, setCategoryId] = useState("");
+  const [categorySearchQuery, setCategorySearchQuery] = useState("");
+  const debouncedCategorySearch = useDebouncedValue(categorySearchQuery, 250);
   const [fieldErrors, setFieldErrors] = useState<{ file?: string; categoryId?: string }>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { data: catData } = useCategories({ limit: 100 });
-  const categories = catData?.data?.categories ?? [];
+  const { data: categoriesResponse } = useCategories({
+    limit: 20,
+    search: debouncedCategorySearch.trim() || undefined,
+  });
+
+  const categoryOptions = useMemo(
+    () =>
+      getCategoriesList(categoriesResponse).map((category) => ({
+        value: category.id,
+        label: category.displayName || category.name,
+      })),
+    [categoriesResponse],
+  );
 
   const uploadMutation = useUploadSites();
 
   const resetForm = () => {
     setFile(null);
     setCategoryId("");
+    setCategorySearchQuery("");
     setFieldErrors({});
     uploadMutation.reset();
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -51,10 +61,7 @@ export default function SiteUploadDialog({ open, onClose }: SiteUploadDialogProp
       setFieldErrors(errs);
       return;
     }
-    uploadMutation.mutate(
-      { file: file!, categoryId },
-      { onSuccess: handleClose },
-    );
+    uploadMutation.mutate({ file: file!, categoryId }, { onSuccess: handleClose });
   };
 
   return (
@@ -85,7 +92,9 @@ export default function SiteUploadDialog({ open, onClose }: SiteUploadDialogProp
                 <Upload className="h-8 w-8" />
                 <span className="text-sm font-medium">Click to select a .txt file</span>
                 <span className="text-xs">
-                  Format: <code className="bg-muted px-1 py-0.5 rounded text-xs">0.0.0.0 example.com</code> — one entry per line
+                  Format:{" "}
+                  <code className="bg-muted px-1 py-0.5 rounded text-xs">0.0.0.0 example.com</code> —
+                  one entry per line
                 </span>
               </div>
             )}
@@ -110,24 +119,17 @@ export default function SiteUploadDialog({ open, onClose }: SiteUploadDialogProp
           <Label>
             Category <span className="text-destructive">*</span>
           </Label>
-          <Select
-            value={categoryId}
-            onValueChange={(v) => {
-              setCategoryId(v);
+          <SearchableSelect
+            options={categoryOptions}
+            value={categoryId || undefined}
+            onChange={(id) => {
+              setCategoryId(id);
               setFieldErrors((prev) => ({ ...prev, categoryId: undefined }));
             }}
-          >
-            <SelectTrigger className="bg-background/50 border-border/50">
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((cat) => (
-                <SelectItem key={cat.id} value={cat.id}>
-                  {cat.displayName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            placeholder="Select a category"
+            searchPlaceholder="Search categories…"
+            onSearchChange={setCategorySearchQuery}
+          />
           {fieldErrors.categoryId && (
             <p className="text-sm text-destructive">{fieldErrors.categoryId}</p>
           )}

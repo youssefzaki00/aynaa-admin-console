@@ -1,13 +1,19 @@
 import CreatePage, { type PageConfig } from "@/components/CreatePage";
-import { useCategories, useCreateCategory, useUpdateCategory, useToggleCategory, useDeleteCategory } from "@/hooks/useCategories";
+import {
+  useCategories,
+  useCreateCategory,
+  useUpdateCategory,
+  useToggleCategory,
+  useDeleteCategory,
+} from "@/hooks/useCategories";
 import { getCategoryColumns } from "@/config/columns/categories.columns";
 import { FolderOpen } from "lucide-react";
-import type { Category } from "@/services/categories";
+import { getCategoriesList, type Category } from "@/services/categories";
 
 const config: PageConfig<Category> = {
   useQuery: (params) => useCategories(params),
   mapQueryParams: (page, search) => ({ page, limit: 20, search: search || undefined }),
-  dataPath: (raw) => raw?.data?.categories ?? [],
+  dataPath: (response) => getCategoriesList(response),
   useCreate: useCreateCategory,
   useUpdate: useUpdateCategory,
   useDelete: useDeleteCategory,

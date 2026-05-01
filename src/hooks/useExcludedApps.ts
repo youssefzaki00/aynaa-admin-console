@@ -1,7 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { excludedAppsService } from "@/services/excluded-apps";
 
-export function useExcludedApps(params?: { lastSync?: string; page?: number; limit?: number }) {
+export function useExcludedApps(params?: {
+  lastSync?: string;
+  page?: number;
+  limit?: number;
+  search?: string;
+}) {
   return useQuery({
     queryKey: ["excluded-apps", params],
     queryFn: () => excludedAppsService.getAll(params),

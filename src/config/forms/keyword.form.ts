@@ -23,7 +23,7 @@ export const keywordFormConfig: FormConfig = {
     {
       name: "categoryId",
       label: "Category",
-      type: "select",
+      type: "searchable-select",
       required: true,
       placeholder: "Select category",
       optionsKey: "categories",

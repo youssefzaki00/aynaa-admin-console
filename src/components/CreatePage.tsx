@@ -104,10 +104,10 @@ export default function CreatePage<TRow extends { id: string }>({
   );
 
   const rawData = query.data;
-  const rows: TRow[] = useMemo(
-    () => config.dataPath(rawData) ?? [],
-    [rawData, config],
-  );
+  const rows: TRow[] = useMemo(() => {
+    const extracted = config.dataPath(rawData);
+    return Array.isArray(extracted) ? extracted : [];
+  }, [rawData, config]);
 
   const customSetupHook = config.useCustomSetup ?? useNoopSetup;
   const {
