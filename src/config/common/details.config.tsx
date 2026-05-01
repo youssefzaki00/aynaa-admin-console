@@ -44,13 +44,15 @@ export function getDetailConfig(
           { label: "ID", value: data.id },
         ],
       };
-    case "whitelist":
+    case "excluded-app":
       return {
-        title: "Whitelisted App Details",
+        title: "Excluded App Details",
         rows: [
-          { label: "App Name", value: data.appName },
+          { label: "Status", value: data.isActive ? "Active" : "Inactive", variant: "status" },
           { label: "Package Name", value: data.packageName },
           { label: "ID", value: data.id },
+          { label: "Created", value: data.createdAt ? new Date(data.createdAt).toLocaleString() : "—" },
+          { label: "Updated", value: data.updatedAt ? new Date(data.updatedAt).toLocaleString() : "—" },
         ],
       };
     default:

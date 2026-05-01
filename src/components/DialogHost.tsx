@@ -5,6 +5,7 @@ import DetailDialog from "@/dialogs/DetailDialog";
 import DeleteDialog from "@/dialogs/DeleteDialog";
 import ReviewDialog from "@/dialogs/ReviewDialog";
 import ImagePreviewDialog from "@/dialogs/ImagePreviewDialog";
+import SiteUploadDialog from "@/dialogs/SiteUploadDialog";
 
 export default function DialogHost() {
   const { state, closeDialog } = useDialog();
@@ -33,6 +34,8 @@ export default function DialogHost() {
       return <ReviewDialog open onClose={handleClose} {...props} />;
     case "image-preview":
       return <ImagePreviewDialog open onClose={handleClose} {...props} />;
+    case "site-upload":
+      return <SiteUploadDialog open onClose={handleClose} />;
     default:
       return null;
   }

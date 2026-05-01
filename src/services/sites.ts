@@ -1,4 +1,4 @@
-import { apiRequest } from "./api";
+import { apiRequest, uploadRequest } from "./api";
 
 export interface Site {
   id: string;
@@ -8,9 +8,21 @@ export interface Site {
   updatedAt: string;
 }
 
+/** Matches GET /sites list envelope (`data.sites` + optional `pagination`). */
+export interface SitesListData {
+  sites: Site[];
+  pagination?: {
+    total?: number;
+    page?: number;
+    limit?: number;
+    totalPages?: number;
+    pages?: number;
+  };
+}
+
 export interface SitesResponse {
   success: boolean;
-  data: Site[];
+  data: SitesListData;
 }
 
 export interface SiteResponse {
@@ -31,4 +43,11 @@ export const sitesService = {
 
   delete: (id: string) =>
     apiRequest<{ success: boolean; message: string }>(`/sites/${id}`, { method: "DELETE" }),
+
+  upload: (payload: { file: File; categoryId: string }) => {
+    const formData = new FormData();
+    formData.append("file", payload.file);
+    formData.append("categoryId", payload.categoryId);
+    return uploadRequest<{ success: boolean; message: string }>("/sites/upload", formData);
+  },
 };

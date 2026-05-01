@@ -1,8 +1,10 @@
 import CreatePage, { type PageConfig } from "@/components/CreatePage";
 import { useSites, useCreateSite, useUpdateSite, useDeleteSite } from "@/hooks/useSites";
 import { getSiteColumns } from "@/config/columns/sites.columns";
-import { Globe } from "lucide-react";
+import { Globe, Upload } from "lucide-react";
 import type { Site } from "@/services/sites";
+import { Button } from "@/ui/button";
+import { useDialog } from "@/lib/dialog-context";
 
 const config: PageConfig<Site> = {
   useQuery: (params) => useSites(params),
@@ -20,8 +22,10 @@ const config: PageConfig<Site> = {
   columnGenerator: getSiteColumns,
   filterDefaults: {},
 };
-console.log(config.dataPath);
+
 export default function SitesPage() {
+  const { openDialog } = useDialog();
+
   return (
     <CreatePage
       config={config}
@@ -30,6 +34,17 @@ export default function SitesPage() {
       icon={<Globe className="h-6 w-6" />}
       addLabel="Add Site"
       searchPlaceholder="Search sites..."
+      action={
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => openDialog("site-upload", {})}
+          className="border-border/50 bg-background/50 hover:bg-accent"
+        >
+          <Upload className="h-4 w-4 mr-1" />
+          Import
+        </Button>
+      }
     />
   );
 }

@@ -25,8 +25,30 @@ interface RequestOptions {
   headers?: Record<string, string>;
 }
 
+const TOKEN_KEYS = ["token", "accessToken", "jwt", "jwtToken"] as const;
+
+/** Reads a bearer token from common login API shapes (root or nested under `data`). */
+export function extractTokenFromLoginResponse(data: unknown): string | null {
+  if (!data || typeof data !== "object") return null;
+  const o = data as Record<string, unknown>;
+  for (const k of TOKEN_KEYS) {
+    const v = o[k];
+    if (typeof v === "string" && v.trim()) return v.trim();
+  }
+  const nested = o.data;
+  if (nested && typeof nested === "object") {
+    const n = nested as Record<string, unknown>;
+    for (const k of TOKEN_KEYS) {
+      const v = n[k];
+      if (typeof v === "string" && v.trim()) return v.trim();
+    }
+  }
+  return null;
+}
+
+/** POST /auth/admin/login — body `{ username, password }`; token at `data.token`. */
 export async function login(credentials: { username: string; password: string }) {
-  const res = await fetch(`${BASE_URL}/auth/login?role=admin`, {
+  const res = await fetch(`${BASE_URL}/auth/admin/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
@@ -81,5 +103,21 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
     throw new Error(data.message || "Request failed");
   }
 
+  return data;
+}
+
+export async function uploadRequest<T>(endpoint: string, formData: FormData): Promise<T> {
+  const url = `${BASE_URL}${endpoint}`;
+  const token = getToken();
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  const res = await fetch(url, { method: "POST", headers, body: formData });
+  const data = await res.json();
+  if (!res.ok || !data.success) {
+    if (res.status === 401) clearToken();
+    throw new Error(data.message || "Request failed");
+  }
   return data;
 }

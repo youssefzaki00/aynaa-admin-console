@@ -88,12 +88,15 @@ export default function PageHeader({
         </div>
       )}
 
-      {action && <div className="flex-shrink-0 ml-auto">{action}</div>}
-
-      {onAdd && !action && (
-        <Button size="sm" onClick={onAdd} className="ml-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25">
-          <Plus className="h-4 w-4 mr-1" /> {addLabel}
-        </Button>
+      {(action || onAdd) && (
+        <div className="flex items-center gap-2 ml-auto shrink-0">
+          {action}
+          {onAdd && (
+            <Button size="sm" onClick={onAdd} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25">
+              <Plus className="h-4 w-4 mr-1" /> {addLabel}
+            </Button>
+          )}
+        </div>
       )}
     </header>
   );

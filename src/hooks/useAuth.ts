@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { getToken, setToken, clearToken, login as loginApi } from "@/services/api";
+import {
+  getToken,
+  setToken,
+  clearToken,
+  login as loginApi,
+  extractTokenFromLoginResponse,
+} from "@/services/api";
 import { toast } from "sonner";
 
 export function useAuth() {
@@ -31,11 +37,14 @@ export function useLogin(onSuccess: (token: string) => void) {
       setIsLoading(true);
       try {
         const response = await loginApi({ username, password });
-        if (response.data?.token) {
-          onSuccess(response.data.token);
+        const token = extractTokenFromLoginResponse(response);
+        if (token) {
+          onSuccess(token);
           toast.success("Welcome back!");
         } else {
-          throw new Error("Invalid response from server");
+          throw new Error(
+            "Login succeeded but the server did not return a token. Expected token, accessToken, or data.token in the JSON body.",
+          );
         }
       } catch (error) {
         toast.error(error instanceof Error ? error.message : "Failed to login");

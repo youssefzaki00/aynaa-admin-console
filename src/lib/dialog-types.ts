@@ -7,7 +7,7 @@ export interface DialogParamsMap {
   "category-form": FormDialogParams;
   "keyword-form": FormDialogParams;
   "site-form": FormDialogParams;
-  "whitelist-form": FormDialogParams;
+  "excluded-app-form": FormDialogParams;
   delete: {
     title: string;
     description: string;
@@ -25,6 +25,7 @@ export interface DialogParamsMap {
   "image-preview": {
     urls: string[];
   };
+  "site-upload": Record<string, never>;
 }
 
 export type DialogName = keyof DialogParamsMap;

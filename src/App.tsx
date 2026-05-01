@@ -8,11 +8,8 @@ import Layout from "@/components/Layout";
 import LoginPage from "@/pages/LoginPage";
 import CategoriesPage from "@/pages/CategoriesPage";
 import KeywordsPage from "@/pages/KeywordsPage";
-import WhitelistPage from "@/pages/WhitelistPage";
 import SitesPage from "@/pages/SitesPage";
-import SuggestionsPage from "@/pages/SuggestionsPage";
-import CustomizationPage from "@/pages/CustomizationPage";
-import UninstallPage from "@/pages/UninstallPage";
+import ExcludedAppsPage from "@/pages/ExcludedAppsPage";
 import NotFound from "@/pages/NotFound";
 import { DialogProvider } from "@/lib/dialog-context";
 import DialogHost from "@/components/DialogHost";
@@ -40,11 +37,8 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<CategoriesPage />} />
             <Route path="/keywords" element={<KeywordsPage />} />
-            <Route path="/whitelist" element={<WhitelistPage />} />
             <Route path="/sites" element={<SitesPage />} />
-            <Route path="/suggestions" element={<SuggestionsPage />} />
-            <Route path="/customization" element={<CustomizationPage />} />
-            <Route path="/uninstall" element={<UninstallPage />} />
+            <Route path="/excluded-apps" element={<ExcludedAppsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

@@ -64,6 +64,7 @@ interface CreatePageProps<TRow extends { id: string }> {
   addLabel?: string;
   searchPlaceholder?: string;
   children?: React.ReactNode;
+  action?: React.ReactNode;
 }
 
 export default function CreatePage<TRow extends { id: string }>({
@@ -74,6 +75,7 @@ export default function CreatePage<TRow extends { id: string }>({
   addLabel,
   searchPlaceholder,
   children,
+  action,
 }: CreatePageProps<TRow>) {
   const filtersHook = useFilters({
     initialFilters: config.filterDefaults,
@@ -168,6 +170,7 @@ export default function CreatePage<TRow extends { id: string }>({
       onPageChange={management.onPageChange}
       searchValue={management.searchValue}
       onSearchChange={management.onSearchChange}
+      action={action}
     >
       {children}
     </DataPageLayout>

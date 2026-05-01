@@ -22,6 +22,7 @@ interface DataPageLayoutProps<T extends { id: string }> {
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   filterPanel?: React.ReactNode;
+  action?: React.ReactNode;
 }
 
 export default function DataPageLayout<T extends { id: string }>({
@@ -42,6 +43,7 @@ export default function DataPageLayout<T extends { id: string }>({
   searchValue,
   onSearchChange,
   filterPanel,
+  action,
 }: DataPageLayoutProps<T>) {
   const isServerSide = !!pagination && !!onPageChange;
 
@@ -64,6 +66,7 @@ export default function DataPageLayout<T extends { id: string }>({
             addLabel={addLabel}
             total={pagination?.total}
             filterPanel={filterPanel}
+            action={action}
           />
         }
         serverSide={isServerSide}

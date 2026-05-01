@@ -1,13 +1,13 @@
 import {
   categoryFormConfig,
+  excludedAppFormConfig,
   keywordFormConfig,
   siteFormConfig,
-  whitelistFormConfig,
 } from "@/config/forms";
 import { getDetailConfig } from "@/config/common/details.config";
 import type { DialogName } from "./dialog-types";
 
-type DialogComponent = "form" | "detail" | "delete" | "review" | "image-preview";
+type DialogComponent = "form" | "detail" | "delete" | "review" | "image-preview" | "site-upload";
 
 type DialogRoute = {
   component: DialogComponent;
@@ -47,10 +47,10 @@ export const dialogRoutes: Record<DialogName, DialogRoute> = {
     }),
   },
 
-  "whitelist-form": {
+  "excluded-app-form": {
     component: "form",
     getProps: (params) => ({
-      config: whitelistFormConfig,
+      config: excludedAppFormConfig,
       editItem: params.editItem ?? null,
       onSave: params.onSave ?? (() => {}),
     }),
@@ -80,6 +80,11 @@ export const dialogRoutes: Record<DialogName, DialogRoute> = {
     getProps: (params) => ({
       urls: params.urls ?? [],
     }),
+  },
+
+  "site-upload": {
+    component: "site-upload",
+    getProps: () => ({}),
   },
 
   detail: {
