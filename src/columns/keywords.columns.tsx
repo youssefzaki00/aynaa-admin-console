@@ -21,7 +21,7 @@ export function getKeywordColumns(handlers: KeywordColumnsHandlers) {
         </Badge>
       ),
     },
-    statusColumn("Status", onToggle, "isEnabled"),
+    statusColumn("Active", onToggle, "isEnabled"),
     actionsColumn("Actions", { onEdit, onDelete }),
   ];
 }

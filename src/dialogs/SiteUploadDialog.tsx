@@ -22,10 +22,13 @@ export default function SiteUploadDialog({ open, onClose }: SiteUploadDialogProp
   const [fieldErrors, setFieldErrors] = useState<{ file?: string; categoryId?: string }>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { data: categoriesResponse } = useCategories({
-    limit: 20,
-    search: debouncedCategorySearch.trim() || undefined,
-  });
+  const { data: categoriesResponse } = useCategories(
+    {
+      limit: 20,
+      search: debouncedCategorySearch.trim() || undefined,
+    },
+    { enabled: open },
+  );
 
   const categoryOptions = useMemo(
     () =>

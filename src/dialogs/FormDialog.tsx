@@ -3,6 +3,7 @@ import DialogActionButtons from "@/components/DialogActionButtons";
 import { type FormFieldConfig } from "@/components/FormField";
 import FormFieldRenderer from "@/components/FormFieldRenderer";
 import { useForm } from "@/hooks/use-form";
+import { useCategoryFormOptions } from "@/hooks/use-category-form-options";
 import type { ZodSchema } from "zod";
 
 export interface FormConfig {
@@ -33,6 +34,9 @@ export default function FormDialog({
   onSave,
   extraParams = {},
 }: FormDialogProps) {
+  const categoryFormOptions = useCategoryFormOptions(open, config.fields);
+  const mergedExtraParams = { ...extraParams, ...categoryFormOptions };
+
   const {
     formState,
     errors,
@@ -68,7 +72,7 @@ export default function FormDialog({
                     field={field}
                     formState={formState}
                     editItem={editItem}
-                    extraParams={extraParams}
+                    extraParams={mergedExtraParams}
                     onFieldChange={handleFieldChange}
                     error={errors[field.name]}
                   />
@@ -83,7 +87,7 @@ export default function FormDialog({
                 field={field}
                 formState={formState}
                 editItem={editItem}
-                extraParams={extraParams}
+                extraParams={mergedExtraParams}
                 onFieldChange={handleFieldChange}
                 error={errors[field.name]}
               />

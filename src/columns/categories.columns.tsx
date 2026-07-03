@@ -21,7 +21,7 @@ export function getCategoryColumns(handlers: CategoryColumnsHandlers) {
         </span>
       ),
     },
-    statusColumn("Status", onToggle),
+    statusColumn("Active", onToggle),
     actionsColumn("Actions", { onEdit, onDelete }),
   ];
 }

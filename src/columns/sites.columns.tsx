@@ -1,15 +1,14 @@
-import { textColumn, actionsColumn } from "@/lib/column-builders";
-import { Badge } from "@/ui/badge";
+import { textColumn, statusColumn, actionsColumn } from "@/lib/column-builders";
 import type { Site } from "@/services/sites";
 
 export type SiteColumnsHandlers = {
-  onToggle: (id: string) => void;
+  onToggle: (id: string, checked: boolean) => void;
   onEdit: (item: unknown) => void;
   onDelete: (item: unknown) => void;
 };
 
 export function getSiteColumns(handlers: SiteColumnsHandlers) {
-  const { onEdit, onDelete } = handlers;
+  const { onToggle, onEdit, onDelete } = handlers;
 
   return [
     textColumn("URL", (s: Site) => s.url, "font-mono text-xs", "url"),
@@ -22,16 +21,7 @@ export function getSiteColumns(handlers: SiteColumnsHandlers) {
         </span>
       ),
     },
-    {
-      key: "isActive",
-      label: "Status",
-      align: "center" as const,
-      render: (item: Site) => (
-        <Badge variant={item.isActive ? "default" : "secondary"} className="font-medium">
-          {item.isActive ? "Active" : "Inactive"}
-        </Badge>
-      ),
-    },
+    statusColumn("Active", onToggle, "isActive"),
     actionsColumn("Actions", { onEdit, onDelete }),
   ];
 }

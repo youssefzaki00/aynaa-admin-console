@@ -1,15 +1,19 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { categoriesService } from "@/services/categories";
 
-export function useCategories(params?: {
-  page?: number;
-  limit?: number;
-  isActive?: boolean;
-  search?: string;
-}) {
+export function useCategories(
+  params?: {
+    page?: number;
+    limit?: number;
+    isActive?: boolean;
+    search?: string;
+  },
+  options?: { enabled?: boolean },
+) {
   return useQuery({
     queryKey: ["categories", params],
     queryFn: () => categoriesService.getAll(params),
+    enabled: options?.enabled ?? true,
   });
 }
 

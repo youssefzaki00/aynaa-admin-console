@@ -6,6 +6,7 @@ import {
   useDeleteExcludedApp,
 } from "@/hooks/useExcludedApps";
 import { getExcludedAppsColumns } from "@/columns/excluded-apps.columns";
+import { useExcludedAppCustomSetup } from "@/hooks/use-excluded-app-setup";
 import { ShieldOff } from "lucide-react";
 import type { ExcludedApp } from "@/services/excluded-apps";
 
@@ -25,6 +26,7 @@ const config: PageConfig<ExcludedApp> = {
   },
   columnGenerator: getExcludedAppsColumns,
   filterDefaults: {},
+  useCustomSetup: useExcludedAppCustomSetup,
   disableSearch: true,
 };
 

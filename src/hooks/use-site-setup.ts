@@ -1,37 +1,28 @@
-import { useMemo, useState } from "react";
-import { useCategories } from "@/hooks/useCategories";
-import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { useMemo, useState, useCallback } from "react";
+import { useUpdateSite } from "@/hooks/useSites";
+import { mutationCallbacks } from "@/lib/utils";
 import type { FiltersHook } from "@/hooks/use-filters";
-import { getCategoriesList } from "@/services/categories";
 import type { Site } from "@/services/sites";
 
 export function useSiteCustomSetup(_args: { filtersHook: FiltersHook; data: Site[]; rawData: unknown }) {
-  const [categorySearchQuery, setCategorySearchQuery] = useState("");
-  const debouncedCategorySearch = useDebouncedValue(categorySearchQuery, 250);
+  const updateMutation = useUpdateSite();
 
-  const { data: categoriesResponse } = useCategories({
-    limit: 20,
-    search: debouncedCategorySearch.trim() || undefined,
-  });
-
-  const categoryOptions = useMemo(
-    () =>
-      getCategoriesList(categoriesResponse).map((category) => ({
-        value: category.id,
-        label: category.displayName || category.name,
-      })),
-    [categoriesResponse],
+  const onToggle = useCallback(
+    (id: string, checked: boolean) => {
+      updateMutation.mutate(
+        { id, data: { isBlocked: checked } },
+        mutationCallbacks("Site status updated", "Failed to update site status"),
+      );
+    },
+    [updateMutation],
   );
 
   return {
-    extraDialogParams: {
-      categories: categoryOptions,
-      categoryRemoteSearch: setCategorySearchQuery,
-    },
     transformEditData: (item: Site) => ({
       ...item,
       categoryId: item.category.id,
       isBlocked: item.isActive,
     }),
+    customColumnHandlers: { onToggle },
   };
 }

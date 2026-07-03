@@ -32,11 +32,11 @@ export function useUpdateExcludedApp() {
       data,
     }: {
       id: string;
-      data: { packageName: string; isActive: boolean };
+      data: { packageName?: string; isActive?: boolean };
     }) =>
       excludedAppsService.update(id, {
-        packageName: data.packageName,
-        isActive: data.isActive,
+        ...(data.packageName !== undefined && { packageName: data.packageName }),
+        ...(data.isActive !== undefined && { isActive: data.isActive }),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["excluded-apps"] });
