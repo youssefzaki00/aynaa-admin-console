@@ -9,10 +9,6 @@ export type OpenDialogFn = <K extends DialogName>(
   params: DialogParamsMap[K],
 ) => void;
 
-export const detailAction = (dataType: string, openDialog: OpenDialogFn) => {
-  return (item: any) => openDialog("detail", { data: item, type: dataType });
-};
-
 export const deleteAction = (
   title: string,
   description: string,
@@ -80,7 +76,6 @@ export const statusColumn = (
 export const actionsColumn = (
   label: string,
   config: {
-    onInfo?: (item: any) => void;
     onEdit?: (item: any) => void;
     onDelete?: (item: any) => void;
   },
@@ -90,7 +85,6 @@ export const actionsColumn = (
   align: "center" as const,
   render: (item: any) => (
     <TableActions
-      onInfo={config.onInfo ? () => config.onInfo!(item) : undefined}
       onEdit={config.onEdit ? () => config.onEdit!(item) : undefined}
       onDelete={config.onDelete ? () => config.onDelete!(item) : undefined}
     />

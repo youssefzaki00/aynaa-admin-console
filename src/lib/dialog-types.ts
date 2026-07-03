@@ -8,6 +8,8 @@ export interface DialogParamsMap {
   "keyword-form": FormDialogParams;
   "site-form": FormDialogParams;
   "excluded-app-form": FormDialogParams;
+  "app-form": FormDialogParams;
+  "request-form": FormDialogParams;
   delete: {
     title: string;
     description: string;
@@ -15,9 +17,6 @@ export interface DialogParamsMap {
     data?: any;
     type?: string;
   };
-  detail:
-    | { data: any; type: string }
-    | { title: string; rows: { label: string; value: any }[] };
   review: {
     title: string;
     onConfirm: (adminNote?: string) => void;

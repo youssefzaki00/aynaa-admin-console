@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import navItems from "@/config/common/sidebar.config";
+import navItems from "@/config/sidebar.config";
 import { LogOut } from "lucide-react";
-import { VERSION } from "@/config/common/version";
+import { VERSION } from "@/config/version";
 
 interface LayoutProps {
   children: ReactNode;

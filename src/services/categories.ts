@@ -1,10 +1,17 @@
 import { apiRequest } from "./api";
 
+/** Nested category reference on keywords, sites, etc. */
+export interface CategoryRef {
+  id: string;
+  name: string;
+  displayName: string;
+}
+
 export interface Category {
   id: string;
   name: string;
   displayName: string;
-  description: string;
+  description: string | null;
   isActive: boolean;
   keywordCount?: number;
   createdAt: string;

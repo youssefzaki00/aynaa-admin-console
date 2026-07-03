@@ -10,6 +10,8 @@ import CategoriesPage from "@/pages/CategoriesPage";
 import KeywordsPage from "@/pages/KeywordsPage";
 import SitesPage from "@/pages/SitesPage";
 import ExcludedAppsPage from "@/pages/ExcludedAppsPage";
+import AppsPage from "@/pages/AppsPage";
+import RequestsPage from "@/pages/RequestsPage";
 import NotFound from "@/pages/NotFound";
 import { DialogProvider } from "@/lib/dialog-context";
 import DialogHost from "@/components/DialogHost";
@@ -39,6 +41,8 @@ function AppContent() {
             <Route path="/keywords" element={<KeywordsPage />} />
             <Route path="/sites" element={<SitesPage />} />
             <Route path="/excluded-apps" element={<ExcludedAppsPage />} />
+            <Route path="/apps" element={<AppsPage />} />
+            <Route path="/requests" element={<RequestsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

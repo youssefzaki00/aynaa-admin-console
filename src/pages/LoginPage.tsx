@@ -5,7 +5,7 @@ import AuthLayout from "@/components/AuthLayout";
 import IconInput from "@/components/IconInput";
 import PasswordInput from "@/components/PasswordInput";
 import { useLogin } from "@/hooks/useAuth";
-import { VERSION } from "@/config/common/version";
+import { VERSION } from "@/config/version";
 
 interface LoginPageProps {
   onLogin: (token: string) => void;

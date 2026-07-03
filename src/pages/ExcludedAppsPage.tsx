@@ -5,7 +5,7 @@ import {
   useUpdateExcludedApp,
   useDeleteExcludedApp,
 } from "@/hooks/useExcludedApps";
-import { getExcludedAppsColumns } from "@/config/columns/excluded-apps.columns";
+import { getExcludedAppsColumns } from "@/columns/excluded-apps.columns";
 import { ShieldOff } from "lucide-react";
 import type { ExcludedApp } from "@/services/excluded-apps";
 
@@ -25,6 +25,7 @@ const config: PageConfig<ExcludedApp> = {
   },
   columnGenerator: getExcludedAppsColumns,
   filterDefaults: {},
+  disableSearch: true,
 };
 
 export default function ExcludedAppsPage() {

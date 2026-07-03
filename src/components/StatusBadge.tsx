@@ -1,12 +1,13 @@
 import { cn } from "@/lib/utils";
 
-type StatusVariant = "active" | "inactive" | "pending" | "approved" | "rejected";
+type StatusVariant = "active" | "inactive" | "pending" | "approved" | "declined" | "rejected";
 
 const variants: Record<StatusVariant, string> = {
   active: "bg-success/10 text-success",
   inactive: "bg-muted text-muted-foreground",
   pending: "bg-warning/10 text-warning",
   approved: "bg-success/10 text-success",
+  declined: "bg-destructive/10 text-destructive",
   rejected: "bg-destructive/10 text-destructive",
 };
 

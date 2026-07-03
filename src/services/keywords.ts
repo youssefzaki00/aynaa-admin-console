@@ -1,18 +1,10 @@
 import { apiRequest } from "./api";
-import type { Pagination } from "./categories";
+import type { CategoryRef, Pagination } from "./categories";
 
 export interface Keyword {
   id: string;
   word: string;
-  category: {
-    id: string;
-    name: string;
-    displayName: string;
-    description: string;
-    isActive: boolean;
-    createdAt: string;
-    updatedAt: string;
-  };
+  category: CategoryRef;
   isEnabled: boolean;
   createdAt: string;
   updatedAt: string;

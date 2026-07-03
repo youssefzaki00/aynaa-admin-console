@@ -1,7 +1,7 @@
 import CreatePage, { type PageConfig } from "@/components/CreatePage";
 import { useKeywords, useCreateKeyword, useUpdateKeyword, useToggleKeyword, useDeleteKeyword } from "@/hooks/useKeywords";
 import { useKeywordCustomSetup } from "@/hooks/use-keyword-setup";
-import { getKeywordColumns } from "@/config/columns/keywords.columns";
+import { getKeywordColumns } from "@/columns/keywords.columns";
 import { Ban } from "lucide-react";
 import type { Keyword } from "@/services/keywords";
 
@@ -23,6 +23,7 @@ const config: PageConfig<Keyword> = {
   columnGenerator: getKeywordColumns,
   filterDefaults: {},
   useCustomSetup: useKeywordCustomSetup,
+  disableSearch: true,
 };
 
 export default function KeywordsPage() {

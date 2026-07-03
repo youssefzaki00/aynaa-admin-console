@@ -30,8 +30,8 @@ export function useSiteCustomSetup(_args: { filtersHook: FiltersHook; data: Site
     },
     transformEditData: (item: Site) => ({
       ...item,
-      categoryId: item.categoryId ?? item.category?.id ?? "",
-      isBlocked: item.isBlocked ?? item.isActive ?? true,
+      categoryId: item.category.id,
+      isBlocked: item.isActive,
     }),
   };
 }

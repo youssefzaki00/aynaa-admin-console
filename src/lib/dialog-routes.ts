@@ -3,11 +3,12 @@ import {
   excludedAppFormConfig,
   keywordFormConfig,
   siteFormConfig,
-} from "@/config/forms";
-import { getDetailConfig } from "@/config/common/details.config";
+  appFormConfig,
+  requestFormConfig,
+} from "@/forms";
 import type { DialogName } from "./dialog-types";
 
-type DialogComponent = "form" | "detail" | "delete" | "review" | "image-preview" | "site-upload";
+type DialogComponent = "form" | "delete" | "review" | "image-preview" | "site-upload";
 
 type DialogRoute = {
   component: DialogComponent;
@@ -60,6 +61,24 @@ export const dialogRoutes: Record<DialogName, DialogRoute> = {
     }),
   },
 
+  "app-form": {
+    component: "form",
+    getProps: (params) => ({
+      config: appFormConfig,
+      editItem: params.editItem ?? null,
+      onSave: params.onSave ?? (() => {}),
+    }),
+  },
+
+  "request-form": {
+    component: "form",
+    getProps: (params) => ({
+      config: requestFormConfig,
+      editItem: params.editItem ?? null,
+      onSave: params.onSave ?? (() => {}),
+    }),
+  },
+
   delete: {
     component: "delete",
     getProps: (params) => ({
@@ -89,30 +108,5 @@ export const dialogRoutes: Record<DialogName, DialogRoute> = {
   "site-upload": {
     component: "site-upload",
     getProps: () => ({}),
-  },
-
-  detail: {
-    component: "detail",
-    getProps: (params) => {
-      if (params.rows && params.title) {
-        return {
-          title: params.title,
-          rows: params.rows,
-        };
-      }
-
-      if (params.data && params.type) {
-        const config = getDetailConfig(params.type, params.data);
-        return {
-          title: config.title,
-          rows: config.rows,
-        };
-      }
-
-      return {
-        title: "",
-        rows: [],
-      };
-    },
   },
 };

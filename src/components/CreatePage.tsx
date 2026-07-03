@@ -34,15 +34,17 @@ export interface PageConfig<TRow extends { id: string }> {
   ) => any;
   dataPath: (raw: any) => TRow[];
 
-  useCreate: () => UseMutationResult<any, any, any>;
+  useCreate?: () => UseMutationResult<any, any, any>;
   useUpdate: () => UseMutationResult<any, any, any>;
-  useDelete: () => UseMutationResult<any, any, any>;
+  useDelete?: () => UseMutationResult<any, any, any>;
   useToggle?: () => UseMutationResult<any, any, any> | undefined;
 
   dialogId: DialogName;
   messages: CrudMessages;
   columnGenerator: (handlers: any) => any[];
   filterDefaults: Record<string, string>;
+  /** When true, hide the search input (API has no search param). */
+  disableSearch?: boolean;
 
   useCustomSetup?: (ctx: {
     filtersHook: FiltersHook;
@@ -68,6 +70,7 @@ interface CreatePageProps<TRow extends { id: string }> {
   searchPlaceholder?: string;
   children?: React.ReactNode;
   action?: React.ReactNode;
+  filterPanel?: (filtersHook: FiltersHook) => React.ReactNode;
 }
 
 export default function CreatePage<TRow extends { id: string }>({
@@ -79,6 +82,7 @@ export default function CreatePage<TRow extends { id: string }>({
   searchPlaceholder,
   children,
   action,
+  filterPanel,
 }: CreatePageProps<TRow>) {
   const filtersHook = useFilters({
     initialFilters: config.filterDefaults,
@@ -91,9 +95,9 @@ export default function CreatePage<TRow extends { id: string }>({
   );
   const query = config.useQuery(queryParams);
 
-  const createMutation = config.useCreate();
+  const createMutation = config.useCreate?.();
   const updateMutation = config.useUpdate();
-  const deleteMutation = config.useDelete();
+  const deleteMutation = config.useDelete?.();
   const toggleMutation = config.useToggle?.();
 
   const mutations: CrudMutations<TRow, any> = useMemo(
@@ -166,14 +170,15 @@ export default function CreatePage<TRow extends { id: string }>({
       isLoading={management.isLoading}
       error={management.error}
       columns={management.columns}
-      onAdd={management.onAdd}
+      onAdd={config.useCreate ? management.onAdd : undefined}
       addLabel={addLabel}
       searchPlaceholder={searchPlaceholder}
       pagination={management.pagination}
       currentPage={management.currentPage}
       onPageChange={management.onPageChange}
-      searchValue={management.searchValue}
-      onSearchChange={management.onSearchChange}
+      searchValue={config.disableSearch ? undefined : management.searchValue}
+      onSearchChange={config.disableSearch ? undefined : management.onSearchChange}
+      filterPanel={filterPanel?.(filtersHook)}
       action={action}
       headerTotal={
         config.listMode === "full" ? finalData.length : undefined

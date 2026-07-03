@@ -1,44 +1,31 @@
 import { apiRequest, uploadRequest } from "./api";
+import type { CategoryRef, Pagination } from "./categories";
 
-/** GET list item — may include category linkage from the API. */
 export interface Site {
   id: string;
   url: string;
+  category: CategoryRef;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-  name?: string;
-  categoryId?: string;
-  category?: { id?: string; name?: string; displayName?: string };
-  isBlocked?: boolean;
 }
 
-export interface SitesListPagination {
-  total?: number;
-  page?: number;
-  limit?: number;
-  totalPages?: number;
-  pages?: number;
-}
-
-/** When GET /sites nests rows under `data.sites` instead of a bare `data` array. */
-export interface SitesListEnvelope {
+/** GET /sites list payload — `{ sites, pagination }`. */
+export interface SitesListData {
   sites: Site[];
-  pagination?: SitesListPagination;
+  pagination: Pagination;
 }
 
-/** GET /sites — `data` may be `Site[]` or `{ sites, pagination }`. */
 export interface SitesResponse {
   success?: boolean;
-  data: Site[] | SitesListEnvelope;
-  pagination?: SitesListPagination;
+  message?: string;
+  data: SitesListData;
 }
-
 
 export interface SiteResponse {
   success: boolean;
   message: string;
-  data: Site;
+  data: { site: Site };
 }
 
 export interface SiteCreateBody {
@@ -55,15 +42,13 @@ export interface SiteUpdateBody {
   isBlocked?: boolean;
 }
 
-/** Table rows from GET /sites (`data` as array or `{ sites }`). */
 export function getSitesListFromResponse(responseBody: unknown): Site[] {
   if (!responseBody || typeof responseBody !== "object") return [];
   const payload = responseBody as Record<string, unknown>;
   const dataPayload = payload.data;
-  if (Array.isArray(dataPayload)) return dataPayload as Site[];
   if (dataPayload && typeof dataPayload === "object") {
-    const sitesNested = (dataPayload as Record<string, unknown>).sites;
-    if (Array.isArray(sitesNested)) return sitesNested as Site[];
+    const sites = (dataPayload as SitesListData).sites;
+    if (Array.isArray(sites)) return sites;
   }
   return [];
 }

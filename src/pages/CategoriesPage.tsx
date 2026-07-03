@@ -6,7 +6,7 @@ import {
   useToggleCategory,
   useDeleteCategory,
 } from "@/hooks/useCategories";
-import { getCategoryColumns } from "@/config/columns/categories.columns";
+import { getCategoryColumns } from "@/columns/categories.columns";
 import { FolderOpen } from "lucide-react";
 import { getCategoriesList, type Category } from "@/services/categories";
 
@@ -27,6 +27,7 @@ const config: PageConfig<Category> = {
   },
   columnGenerator: getCategoryColumns,
   filterDefaults: {},
+  disableSearch: true,
 };
 
 export default function CategoriesPage() {

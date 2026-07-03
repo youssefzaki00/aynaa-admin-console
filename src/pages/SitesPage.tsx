@@ -1,7 +1,7 @@
 import CreatePage, { type PageConfig } from "@/components/CreatePage";
 import { useSites, useCreateSite, useUpdateSite, useDeleteSite } from "@/hooks/useSites";
 import { useSiteCustomSetup } from "@/hooks/use-site-setup";
-import { getSiteColumns } from "@/config/columns/sites.columns";
+import { getSiteColumns } from "@/columns/sites.columns";
 import { Globe, Upload } from "lucide-react";
 import { getSitesListFromResponse, type Site } from "@/services/sites";
 import { Button } from "@/ui/button";
@@ -23,6 +23,7 @@ const config: PageConfig<Site> = {
   columnGenerator: getSiteColumns,
   filterDefaults: {},
   useCustomSetup: useSiteCustomSetup,
+  disableSearch: true,
 };
 
 export default function SitesPage() {
@@ -36,17 +37,17 @@ export default function SitesPage() {
       icon={<Globe className="h-6 w-6" />}
       addLabel="Add Site"
       searchPlaceholder="Search sites..."
-      action={
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => openDialog("site-upload", {})}
-          className="border-border/50 bg-background/50 hover:bg-accent"
-        >
-          <Upload className="h-4 w-4 mr-1" />
-          Import
-        </Button>
-      }
+      // action={
+      //   <Button
+      //     size="sm"
+      //     variant="outline"
+      //     onClick={() => openDialog("site-upload", {})}
+      //     className="border-border/50 bg-background/50 hover:bg-accent"
+      //   >
+      //     <Upload className="h-4 w-4 mr-1" />
+      //     Import
+      //   </Button>
+      // }
     />
   );
 }

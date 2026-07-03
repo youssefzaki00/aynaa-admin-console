@@ -1,14 +1,13 @@
-import { textColumn, statusColumn, actionsColumn, detailAction, type OpenDialogFn } from "@/lib/column-builders";
+import { textColumn, statusColumn, actionsColumn } from "@/lib/column-builders";
 
 export type CategoryColumnsHandlers = {
   onToggle: (id: string, enabled: boolean) => void;
-  openDialog: OpenDialogFn;
   onEdit: (item: any) => void;
   onDelete: (item: any) => void;
 };
 
 export function getCategoryColumns(handlers: CategoryColumnsHandlers) {
-  const { onToggle, openDialog, onEdit, onDelete } = handlers;
+  const { onToggle, onEdit, onDelete } = handlers;
 
   return [
     textColumn("Name", (c) => c.name, "font-mono text-xs", "name"),
@@ -16,17 +15,13 @@ export function getCategoryColumns(handlers: CategoryColumnsHandlers) {
     {
       key: "description",
       label: "Description",
-      render: (item: any) => (
+      render: (item: { description: string | null }) => (
         <span className="text-muted-foreground text-sm max-w-xs truncate block">
           {item.description || "—"}
         </span>
       ),
     },
     statusColumn("Status", onToggle),
-    actionsColumn("Actions", {
-      onInfo: detailAction("category", openDialog),
-      onEdit,
-      onDelete,
-    }),
+    actionsColumn("Actions", { onEdit, onDelete }),
   ];
 }
