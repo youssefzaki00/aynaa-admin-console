@@ -48,14 +48,14 @@ export default function PageHeader({
   }, [localSearch, onSearchChange, searchValue]);
 
   return (
-    <header className={cn("flex flex-col sm:flex-row sm:items-center gap-4 mb-8 p-6 bg-card/50 backdrop-blur-sm rounded-xl border border-border/50", className)}>
+    <header className={cn("flex flex-col sm:flex-row sm:items-center gap-4 mb-8 p-6 bg-card rounded-xl border border-border", className)}>
       <div className="flex items-center gap-4 shrink-0">
         {icon ? (
           <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary shrink-0">
             {icon}
           </div>
         ) : (
-          <div className="w-1 h-12 bg-gradient-to-b from-primary to-primary/50 rounded-full"></div>
+          <div className="w-1 h-12 bg-primary rounded-full"></div>
         )}
         <div>
           <div className="flex items-center gap-2">

@@ -80,7 +80,7 @@ export default function DataTable<T>({
     <div className="space-y-4">
       {header}
 
-      <div className="border border-border/50 rounded-xl bg-card/50 backdrop-blur-sm overflow-hidden shadow-xl">
+      <div className="border border-border rounded-xl bg-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>

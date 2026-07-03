@@ -22,7 +22,7 @@ export default function BaseDialog({
     <Dialog open={open} onOpenChange={(o) => (!o && onClose())}>
       <DialogContent
         className={cn(
-          "bg-card/95 backdrop-blur-sm border-border/50 max-h-[80vh] overflow-y-auto",
+          "bg-card border-border max-h-[80vh] overflow-y-auto",
           maxWidth,
           className
         )}
