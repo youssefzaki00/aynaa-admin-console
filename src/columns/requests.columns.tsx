@@ -26,6 +26,7 @@ export function getRequestsColumns(handlers: RequestsColumnsHandlers) {
   const { onEdit } = handlers;
 
   return [
+  textColumn("User ID", (r) => r.userId || "—", "text-muted-foreground text-xs max-w-xs", "userId"),
     {
       key: "type",
       label: "Type",
