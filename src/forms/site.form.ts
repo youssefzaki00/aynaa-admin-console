@@ -11,7 +11,7 @@ const siteSchema = z.object({
     .min(1, "URL is required")
     .regex(urlRegex, "Please enter a valid domain (e.g. example.com)"),
   categoryId: z.string().min(1, "Category is required"),
-  isBlocked: z.boolean(),
+  isActive: z.boolean(),
 });
 
 export const siteFormConfig: FormConfig = {
@@ -46,8 +46,8 @@ export const siteFormConfig: FormConfig = {
         optionsKey: "categories",
       },
       {
-        name: "isBlocked",
-        label: "Blocked",
+        name: "isActive",
+        label: "Active",
         type: "switch",
         defaultValue: true,
       },

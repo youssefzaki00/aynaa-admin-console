@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useUpdateSite } from "@/hooks/useSites";
 import { mutationCallbacks } from "@/lib/utils";
 import type { FiltersHook } from "@/hooks/use-filters";
@@ -10,7 +10,7 @@ export function useSiteCustomSetup(_args: { filtersHook: FiltersHook; data: Site
   const onToggle = useCallback(
     (id: string, checked: boolean) => {
       updateMutation.mutate(
-        { id, data: { isBlocked: checked } },
+        { id, data: { isActive: checked } },
         mutationCallbacks("Site status updated", "Failed to update site status"),
       );
     },
@@ -21,7 +21,6 @@ export function useSiteCustomSetup(_args: { filtersHook: FiltersHook; data: Site
     transformEditData: (item: Site) => ({
       ...item,
       categoryId: item.category.id,
-      isBlocked: item.isActive,
     }),
     customColumnHandlers: { onToggle },
   };

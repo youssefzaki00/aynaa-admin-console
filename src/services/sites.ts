@@ -32,14 +32,14 @@ export interface SiteCreateBody {
   name: string;
   url: string;
   categoryId: string;
-  isBlocked: boolean;
+  isActive: boolean;
 }
 
 export interface SiteUpdateBody {
   name?: string;
   url?: string;
   categoryId?: string;
-  isBlocked?: boolean;
+  isActive?: boolean;
 }
 
 export function getSitesListFromResponse(responseBody: unknown): Site[] {
