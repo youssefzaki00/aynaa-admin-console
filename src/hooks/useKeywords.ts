@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { keywordsService } from "@/services/keywords";
 
-export function useKeywords(params?: { page?: number; limit?: number; categoryId?: string; isEnabled?: boolean }) {
+export function useKeywords(params?: { categoryId?: string; isEnabled?: boolean }) {
   return useQuery({
     queryKey: ["keywords", params],
     queryFn: () => keywordsService.getAll(params),

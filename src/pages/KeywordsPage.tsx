@@ -7,7 +7,8 @@ import type { Keyword } from "@/services/keywords";
 
 const config: PageConfig<Keyword> = {
   useQuery: (params) => useKeywords(params),
-  mapQueryParams: (page, search) => ({ page, limit: 20, search: search || undefined }),
+  mapQueryParams: () => ({}),
+  listMode: "full",
   dataPath: (raw) => raw?.data?.keywords ?? [],
   useCreate: useCreateKeyword,
   useUpdate: useUpdateKeyword,

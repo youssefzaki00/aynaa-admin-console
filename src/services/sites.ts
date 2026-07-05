@@ -54,7 +54,7 @@ export function getSitesListFromResponse(responseBody: unknown): Site[] {
 }
 
 export const sitesService = {
-  getAll: (params?: { page?: number; limit?: number; search?: string }) =>
+  getAll: (params?: { search?: string }) =>
     apiRequest<SitesResponse>("/sites", {
       params: params as Record<string, string | number | boolean | undefined>,
     }),

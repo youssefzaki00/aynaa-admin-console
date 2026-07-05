@@ -9,7 +9,8 @@ import { useDialog } from "@/lib/dialog-context";
 
 const config: PageConfig<Site> = {
   useQuery: (params) => useSites(params),
-  mapQueryParams: (page, search) => ({ page, limit: 20, search: search || undefined }),
+  mapQueryParams: () => ({}),
+  listMode: "full",
   dataPath: (response) => getSitesListFromResponse(response),
   useCreate: useCreateSite,
   useUpdate: useUpdateSite,

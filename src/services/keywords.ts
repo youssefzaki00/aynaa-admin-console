@@ -26,7 +26,7 @@ export interface KeywordResponse {
 }
 
 export const keywordsService = {
-  getAll: (params?: { page?: number; limit?: number; categoryId?: string; isEnabled?: boolean }) =>
+  getAll: (params?: { categoryId?: string; isEnabled?: boolean }) =>
     apiRequest<KeywordsResponse>("/keywords", { params: params as Record<string, string | number | boolean | undefined> }),
 
   create: (body: { word: string; categoryId: string }) =>
