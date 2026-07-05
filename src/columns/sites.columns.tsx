@@ -1,5 +1,5 @@
 import { textColumn, statusColumn, actionsColumn } from "@/lib/column-builders";
-import type { Site } from "@/services/sites";
+import { siteCategoryLabel, type Site } from "@/services/sites";
 
 export type SiteColumnsHandlers = {
   onToggle: (id: string, checked: boolean) => void;
@@ -17,7 +17,7 @@ export function getSiteColumns(handlers: SiteColumnsHandlers) {
       label: "Category",
       render: (item: Site) => (
         <span className="text-sm text-muted-foreground">
-          {item.category.displayName || item.category.name}
+          {siteCategoryLabel(item.category)}
         </span>
       ),
     },

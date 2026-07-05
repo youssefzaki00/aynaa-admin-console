@@ -20,7 +20,7 @@ export function useSiteCustomSetup(_args: { filtersHook: FiltersHook; data: Site
   return {
     transformEditData: (item: Site) => ({
       ...item,
-      categoryId: item.category.id,
+      categoryId: "",
     }),
     customColumnHandlers: { onToggle },
   };

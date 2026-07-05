@@ -1,13 +1,25 @@
 import { apiRequest, uploadRequest } from "./api";
-import type { CategoryRef, Pagination } from "./categories";
+import type { Pagination } from "./categories";
+
+/** Category embedded on a site list item (no id; displayName may be omitted). */
+export interface SiteCategory {
+  name: string;
+  displayName?: string;
+}
 
 export interface Site {
   id: string;
   url: string;
-  category: CategoryRef;
+  category: SiteCategory | null;
   isActive: boolean;
+  deletedAt: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export function siteCategoryLabel(category: SiteCategory | null | undefined): string {
+  if (!category) return "—";
+  return category.displayName || category.name || "—";
 }
 
 /** GET /sites list payload — `{ sites, pagination }`. */
@@ -43,13 +55,22 @@ export interface SiteUpdateBody {
 }
 
 export function getSitesListFromResponse(responseBody: unknown): Site[] {
-  if (!responseBody || typeof responseBody !== "object") return [];
+  if (!responseBody) return [];
+  if (Array.isArray(responseBody)) return responseBody as Site[];
+
+  if (typeof responseBody !== "object") return [];
   const payload = responseBody as Record<string, unknown>;
+
   const dataPayload = payload.data;
+  if (Array.isArray(dataPayload)) return dataPayload as Site[];
+
   if (dataPayload && typeof dataPayload === "object") {
     const sites = (dataPayload as SitesListData).sites;
     if (Array.isArray(sites)) return sites;
   }
+
+  if (Array.isArray(payload.sites)) return payload.sites as Site[];
+
   return [];
 }
 
