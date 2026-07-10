@@ -10,6 +10,11 @@ export interface DialogParamsMap {
   "excluded-app-form": FormDialogParams;
   "app-form": FormDialogParams;
   "request-form": FormDialogParams;
+  "request-review": {
+    variant: "approve" | "reject";
+    request: any;
+    onConfirm: () => Promise<void> | void;
+  };
   delete: {
     title: string;
     description: string;

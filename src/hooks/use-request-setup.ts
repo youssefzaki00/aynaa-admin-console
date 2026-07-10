@@ -1,5 +1,5 @@
 import { useDialog } from "@/lib/dialog-context";
-import { mutationCallbacks } from "@/lib/utils";
+import { toast } from "sonner";
 import { useUpdateRequest } from "@/hooks/useRequests";
 import type { FiltersHook } from "@/hooks/use-filters";
 import type { AppRequest, RequestStatus } from "@/services/requests";
@@ -9,34 +9,35 @@ export function useRequestCustomSetup(_args: {
   data: AppRequest[];
   rawData: unknown;
 }) {
-  const { openDialog, closeDialog } = useDialog();
+  const { openDialog } = useDialog();
   const update = useUpdateRequest();
 
-  const confirmStatusChange = (item: AppRequest, status: RequestStatus) => {
+  const openReview = (item: AppRequest, status: RequestStatus) => {
     const isApprove = status === "APPROVED";
-    const action = isApprove ? "approve" : "reject";
 
-    openDialog("delete", {
-      title: isApprove ? "Approve Request" : "Reject Request",
-      description: `Are you sure you want to ${action} this request? This action cannot be undone.`,
-      confirmLabel: isApprove ? "Confirm Approve" : "Confirm Reject",
-      onConfirm: () => {
-        update.mutate(
-          { id: item.id, data: { status } },
-          mutationCallbacks(
-            isApprove ? "Request approved" : "Request rejected",
-            undefined,
-            closeDialog,
-          ),
-        );
+    openDialog("request-review", {
+      variant: isApprove ? "approve" : "reject",
+      request: item,
+      onConfirm: async () => {
+        try {
+          await update.mutateAsync({ id: item.id, data: { status } });
+          toast.success(isApprove ? "Request approved" : "Request rejected");
+        } catch (err) {
+          const message =
+            err && typeof err === "object" && "message" in err
+              ? String((err as { message?: string }).message)
+              : undefined;
+          toast.error(message ?? "Something went wrong");
+          throw err;
+        }
       },
     });
   };
 
   return {
     customColumnHandlers: {
-      onApprove: (item: AppRequest) => confirmStatusChange(item, "APPROVED"),
-      onReject: (item: AppRequest) => confirmStatusChange(item, "REJECTED"),
+      onApprove: (item: AppRequest) => openReview(item, "APPROVED"),
+      onReject: (item: AppRequest) => openReview(item, "REJECTED"),
     },
   };
 }

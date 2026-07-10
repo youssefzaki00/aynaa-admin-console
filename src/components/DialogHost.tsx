@@ -3,6 +3,7 @@ import FormDialog from "@/dialogs/FormDialog";
 import { dialogRoutes } from "@/lib/dialog-routes";
 import DeleteDialog from "@/dialogs/DeleteDialog";
 import ReviewDialog from "@/dialogs/ReviewDialog";
+import RequestReviewDialog from "@/dialogs/RequestReviewDialog";
 import ImagePreviewDialog from "@/dialogs/ImagePreviewDialog";
 import SiteUploadDialog from "@/dialogs/SiteUploadDialog";
 
@@ -29,6 +30,8 @@ export default function DialogHost() {
       return <DeleteDialog open onClose={handleClose} {...props} />;
     case "review":
       return <ReviewDialog open onClose={handleClose} {...props} />;
+    case "request-review":
+      return <RequestReviewDialog open onClose={handleClose} {...props} />;
     case "image-preview":
       return <ImagePreviewDialog open onClose={handleClose} {...props} />;
     case "site-upload":

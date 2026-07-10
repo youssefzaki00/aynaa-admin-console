@@ -8,7 +8,13 @@ import {
 } from "@/forms";
 import type { DialogName } from "./dialog-types";
 
-type DialogComponent = "form" | "delete" | "review" | "image-preview" | "site-upload";
+type DialogComponent =
+  | "form"
+  | "delete"
+  | "review"
+  | "request-review"
+  | "image-preview"
+  | "site-upload";
 
 type DialogRoute = {
   component: DialogComponent;
@@ -76,6 +82,15 @@ export const dialogRoutes: Record<DialogName, DialogRoute> = {
       config: requestFormConfig,
       editItem: params.editItem ?? null,
       onSave: params.onSave ?? (() => {}),
+    }),
+  },
+
+  "request-review": {
+    component: "request-review",
+    getProps: (params) => ({
+      variant: params.variant ?? "approve",
+      request: params.request,
+      onConfirm: params.onConfirm ?? (() => {}),
     }),
   },
 
