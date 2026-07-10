@@ -1,4 +1,5 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { Button } from "@/ui/button";
 import { cn } from "@/lib/utils";
 
 interface CustomPaginationProps {
@@ -6,14 +7,31 @@ interface CustomPaginationProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   className?: string;
+  totalItems?: number;
+  pageSize?: number;
 }
 
-function getPageNumbers(current: number, total: number): number[] {
-  if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
-  const start = Math.max(1, current - 2);
-  const end = Math.min(total, start + 4);
-  const from = Math.max(1, end - 4);
-  return Array.from({ length: end - from + 1 }, (_, i) => from + i);
+type PageItem = number | "ellipsis";
+
+function getPageRange(current: number, total: number): PageItem[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const range: PageItem[] = [];
+  const delta = 1;
+  const left = current - delta;
+  const right = current + delta;
+
+  for (let i = 1; i <= total; i++) {
+    if (i === 1 || i === total || (i >= left && i <= right)) {
+      range.push(i);
+    } else if (range[range.length - 1] !== "ellipsis") {
+      range.push("ellipsis");
+    }
+  }
+
+  return range;
 }
 
 export default function CustomPagination({
@@ -21,58 +39,106 @@ export default function CustomPagination({
   totalPages,
   onPageChange,
   className,
+  totalItems,
+  pageSize = 20,
 }: CustomPaginationProps) {
-  const pages = getPageNumbers(currentPage, totalPages);
+  const pages = getPageRange(currentPage, totalPages);
+  const canGoPrev = currentPage > 1;
+  const canGoNext = currentPage < totalPages;
+
+  const rangeStart = totalItems ? (currentPage - 1) * pageSize + 1 : undefined;
+  const rangeEnd = totalItems
+    ? Math.min(currentPage * pageSize, totalItems)
+    : undefined;
 
   return (
-    <nav
-      role="navigation"
-      aria-label="pagination"
-      className={cn("flex items-center justify-center gap-2", className)}
+    <div
+      className={cn(
+        "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between",
+        className,
+      )}
     >
-      <button
-        type="button"
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-        disabled={currentPage <= 1}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-accent border border-border transition-colors hover:bg-accent/80 disabled:opacity-50 disabled:pointer-events-none text-foreground"
-        aria-label="Previous"
-      >
-        <ChevronLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Previous</span>
-      </button>
+      <p className="text-sm text-muted-foreground tabular-nums">
+        {totalItems != null && rangeStart != null && rangeEnd != null ? (
+          <>
+            Showing <span className="font-medium text-foreground">{rangeStart}</span>
+            {" – "}
+            <span className="font-medium text-foreground">{rangeEnd}</span>
+            {" of "}
+            <span className="font-medium text-foreground">{totalItems}</span>
+          </>
+        ) : (
+          <>
+            Page <span className="font-medium text-foreground">{currentPage}</span>
+            {" of "}
+            <span className="font-medium text-foreground">{totalPages}</span>
+          </>
+        )}
+      </p>
 
-      <div className="flex items-center gap-1">
-        {pages.map((p) => {
-          const isActive = p === currentPage;
-          return (
-            <button
-              key={p}
-              type="button"
-              onClick={() => onPageChange(p)}
-              aria-current={isActive ? "page" : undefined}
-              className={cn(
-                "w-8 h-8 rounded-lg text-sm font-medium shrink-0 transition-colors",
-                isActive
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-foreground hover:bg-accent"
-              )}
-            >
-              {p}
-            </button>
-          );
-        })}
-      </div>
-
-      <button
-        type="button"
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-        disabled={currentPage >= totalPages}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-accent border border-border transition-colors hover:bg-accent/80 disabled:opacity-50 disabled:pointer-events-none text-foreground"
-        aria-label="Next"
+      <nav
+        role="navigation"
+        aria-label="pagination"
+        className="flex items-center justify-center gap-1"
       >
-        <span className="hidden sm:inline">Next</span>
-        <ChevronRight className="h-4 w-4" />
-      </button>
-    </nav>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={!canGoPrev}
+          aria-label="Go to previous page"
+          className="h-9 gap-1 px-3 text-muted-foreground hover:text-foreground disabled:opacity-40"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          <span className="hidden sm:inline">Previous</span>
+        </Button>
+
+        <div className="flex items-center gap-1 px-1">
+          {pages.map((item, index) =>
+            item === "ellipsis" ? (
+              <span
+                key={`ellipsis-${index}`}
+                aria-hidden
+                className="flex h-9 w-9 items-center justify-center text-muted-foreground"
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </span>
+            ) : (
+              <Button
+                key={item}
+                type="button"
+                variant={item === currentPage ? "default" : "outline"}
+                size="icon"
+                onClick={() => onPageChange(item)}
+                aria-current={item === currentPage ? "page" : undefined}
+                aria-label={`Go to page ${item}`}
+                className={cn(
+                  "h-9 w-9 text-sm font-medium tabular-nums",
+                  item === currentPage
+                    ? "pointer-events-none shadow-sm"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {item}
+              </Button>
+            ),
+          )}
+        </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={!canGoNext}
+          aria-label="Go to next page"
+          className="h-9 gap-1 px-3 text-muted-foreground hover:text-foreground disabled:opacity-40"
+        >
+          <span className="hidden sm:inline">Next</span>
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </nav>
+    </div>
   );
 }

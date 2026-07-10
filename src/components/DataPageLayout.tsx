@@ -78,6 +78,8 @@ export default function DataPageLayout<T extends { id: string }>({
         serverSide={isServerSide}
         serverTotalPages={pagination?.totalPages}
         serverCurrentPage={currentPage}
+        serverTotalItems={pagination?.total}
+        serverPageSize={pagination?.limit}
         onServerPageChange={onPageChange}
       />
       {children}

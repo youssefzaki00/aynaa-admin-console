@@ -13,7 +13,7 @@ const config: PageConfig<AppRequest> = {
   useQuery: (params) => useRequests(params),
   mapQueryParams: (page, _search, filters) => ({
     page,
-    limit: 20,
+    limit: 5,
     userId: filters.userId || undefined,
     status: (filters.status as RequestStatus) || undefined,
   }),

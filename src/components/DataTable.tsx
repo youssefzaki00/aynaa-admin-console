@@ -21,6 +21,8 @@ interface DataTableProps<T> {
   serverSide?: boolean;
   serverTotalPages?: number;
   serverCurrentPage?: number;
+  serverTotalItems?: number;
+  serverPageSize?: number;
   onServerPageChange?: (page: number) => void;
   /** When true (client mode), show all filtered rows and hide pagination footer. */
   hidePagination?: boolean;
@@ -35,6 +37,8 @@ export default function DataTable<T>({
   serverSide = false,
   serverTotalPages,
   serverCurrentPage,
+  serverTotalItems,
+  serverPageSize,
   onServerPageChange,
   hidePagination = false,
 }: DataTableProps<T>) {
@@ -148,6 +152,8 @@ export default function DataTable<T>({
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
+              totalItems={serverSide ? serverTotalItems : filtered.length}
+              pageSize={serverSide ? serverPageSize : pageSize}
             />
           </div>
         )}
