@@ -1,4 +1,6 @@
 import { apiRequest } from "./api";
+import type { ApiItemResponse, ApiListResponse } from "@/services/api-types";
+import { getItemsFromListResponse } from "@/services/api-types";
 
 export type RequestStatus = "PENDING" | "APPROVED" | "DECLINED" | "REJECTED";
 export type RequestType = "UNINSTALL" | string;
@@ -21,23 +23,16 @@ export interface RequestsPagination {
   pages: number;
 }
 
-export interface RequestsResponse {
-  success: boolean;
-  message?: string;
-  data: {
-    requests: AppRequest[];
+export interface RequestsResponse extends ApiListResponse<AppRequest> {
+  data: ApiListResponse<AppRequest>["data"] & {
     pagination: RequestsPagination;
   };
 }
 
-export interface UpdateRequestResponse {
-  success: boolean;
-  message: string;
-  data: { request: AppRequest };
-}
+export type UpdateRequestResponse = ApiItemResponse<AppRequest>;
 
 export function getRequestsList(apiResponse: RequestsResponse | undefined): AppRequest[] {
-  return apiResponse?.data?.requests ?? [];
+  return getItemsFromListResponse(apiResponse);
 }
 
 export const requestsService = {

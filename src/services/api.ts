@@ -1,15 +1,15 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "https://api.wekayaa.com/api/v1";
+const BASE_URL = import.meta.env.VITE_API_URL || "https://api.aynaa.com/api/v1";
 
 export function getToken(): string | null {
-  return localStorage.getItem("wekayaa_admin_token");
+  return localStorage.getItem("aynaa_admin_token");
 }
 
 export function setToken(token: string) {
-  localStorage.setItem("wekayaa_admin_token", token);
+  localStorage.setItem("aynaa_admin_token", token);
 }
 
 export function clearToken() {
-  localStorage.removeItem("wekayaa_admin_token");
+  localStorage.removeItem("aynaa_admin_token");
 }
 
 // Keep legacy key functions if needed elsewhere, but they are likely obsolete.

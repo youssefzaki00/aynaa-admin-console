@@ -1,6 +1,6 @@
 import CreatePage, { type PageConfig } from "@/components/CreatePage";
-import StatusFilterPanel from "@/components/StatusFilterPanel";
 import { useRequests, useUpdateRequest } from "@/hooks/useRequests";
+import { useRequestCustomSetup } from "@/hooks/use-request-setup";
 import { getRequestsColumns } from "@/columns/requests.columns";
 import { getRequestsList, type AppRequest } from "@/services/requests";
 import { Inbox } from "lucide-react";
@@ -23,6 +23,7 @@ const config: PageConfig<AppRequest> = {
   },
   columnGenerator: getRequestsColumns,
   filterDefaults: { type: "" },
+  useCustomSetup: useRequestCustomSetup,
 };
 
 export default function RequestsPage() {

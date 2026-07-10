@@ -84,6 +84,7 @@ export const dialogRoutes: Record<DialogName, DialogRoute> = {
     getProps: (params) => ({
       title: params.title ?? "Delete",
       description: params.description ?? "Are you sure?",
+      confirmLabel: params.confirmLabel,
       onConfirm: () => {
         params.onConfirm?.();
       },

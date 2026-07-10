@@ -14,6 +14,7 @@ export interface DialogParamsMap {
     title: string;
     description: string;
     onConfirm: () => void;
+    confirmLabel?: string;
     data?: any;
     type?: string;
   };

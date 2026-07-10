@@ -137,7 +137,7 @@ npm run type-check  # or npx tsc --noEmit
 ### Environment Variables
 
 ```env
-VITE_API_URL=https://api.wekayaa.com/api/v1
+VITE_API_URL=https://api.aynaa.com/api/v1
 ```
 
 ### API Integration
@@ -179,7 +179,7 @@ Pages use `PageConfig` objects that define:
 ## Authentication
 
 Login uses JWT tokens stored in localStorage:
-- Token key: `wekayaa_admin_token`
+- Token key: `aynaa_admin_token`
 - Auto-logout on 401 responses
 - Protected routes via `useAuth` hook
 

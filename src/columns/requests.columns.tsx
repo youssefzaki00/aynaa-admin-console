@@ -1,6 +1,7 @@
-import { textColumn, actionsColumn } from "@/lib/column-builders";
+import { textColumn } from "@/lib/column-builders";
 import { Badge } from "@/ui/badge";
 import StatusBadge from "@/components/StatusBadge";
+import TableActions from "@/components/TableActions";
 import type { AppRequest } from "@/services/requests";
 
 function statusVariant(status: string): "pending" | "approved" | "declined" | "rejected" | "inactive" {
@@ -19,14 +20,15 @@ function statusVariant(status: string): "pending" | "approved" | "declined" | "r
 }
 
 export type RequestsColumnsHandlers = {
-  onEdit: (item: unknown) => void;
+  onApprove: (item: AppRequest) => void;
+  onReject: (item: AppRequest) => void;
 };
 
 export function getRequestsColumns(handlers: RequestsColumnsHandlers) {
-  const { onEdit } = handlers;
+  const { onApprove, onReject } = handlers;
 
   return [
-  textColumn("User ID", (r) => r.userId || "—", "text-muted-foreground text-xs max-w-xs", "userId"),
+    textColumn("User ID", (r) => r.userId || "—", "text-muted-foreground text-xs max-w-xs", "userId"),
     {
       key: "type",
       label: "Type",
@@ -47,6 +49,21 @@ export function getRequestsColumns(handlers: RequestsColumnsHandlers) {
       ),
     },
     textColumn("Message", (r) => r.message || "—", "text-muted-foreground text-xs max-w-xs", "message"),
-    actionsColumn("Actions", { onEdit }),
+    {
+      key: "actions",
+      label: "Actions",
+      align: "center" as const,
+      render: (item: AppRequest) => {
+        const isPending = item.status?.toUpperCase() === "PENDING";
+        if (!isPending) return <span className="text-muted-foreground text-xs">—</span>;
+
+        return (
+          <TableActions
+            onApprove={() => onApprove(item)}
+            onReject={() => onReject(item)}
+          />
+        );
+      },
+    },
   ];
 }

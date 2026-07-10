@@ -1,4 +1,6 @@
 import { apiRequest } from "./api";
+import type { ApiItemResponse, ApiListResponse } from "@/services/api-types";
+import { getItemsFromListResponse } from "@/services/api-types";
 
 export interface ExcludedApp {
   id: string;
@@ -8,32 +10,14 @@ export interface ExcludedApp {
   updatedAt: string;
 }
 
-export interface ExcludedAppsListData {
-  excludedApps: ExcludedApp[];
-  pagination?: {
-    total?: number;
-    page?: number;
-    limit?: number;
-    totalPages?: number;
-    pages?: number;
-  };
-}
+export type ExcludedAppsResponse = ApiListResponse<ExcludedApp>;
 
-export interface ExcludedAppsResponse {
-  success: boolean;
-  data: ExcludedAppsListData;
-}
+export type ExcludedAppResponse = ApiItemResponse<ExcludedApp>;
 
-export interface ExcludedAppResponse {
-  success: boolean;
-  message: string;
-  data: { excludedApp: ExcludedApp };
-}
+export type DeletedExcludedAppResponse = ApiItemResponse<{ id: string; packageName: string }>;
 
-export interface DeletedExcludedAppResponse {
-  success: boolean;
-  message: string;
-  data: { deletedExcludedApp: { id: string; packageName: string } };
+export function getExcludedAppsList(apiResponse: ExcludedAppsResponse | undefined): ExcludedApp[] {
+  return getItemsFromListResponse(apiResponse);
 }
 
 export const excludedAppsService = {

@@ -1,5 +1,7 @@
 import { apiRequest } from "./api";
-import type { CategoryRef, Pagination } from "./categories";
+import type { CategoryRef } from "./categories";
+import type { ApiItemResponse, ApiListResponse } from "@/services/api-types";
+import { getItemsFromListResponse } from "@/services/api-types";
 
 export interface Keyword {
   id: string;
@@ -10,20 +12,13 @@ export interface Keyword {
   updatedAt: string;
 }
 
-export interface KeywordsResponse {
-  success: boolean;
-  message: string;
-  data: {
-    keywords: Keyword[];
-    pagination: Pagination;
-  };
+export type KeywordsResponse = ApiListResponse<Keyword>;
+
+export function getKeywordsList(apiResponse: KeywordsResponse | undefined): Keyword[] {
+  return getItemsFromListResponse(apiResponse);
 }
 
-export interface KeywordResponse {
-  success: boolean;
-  message: string;
-  data: { keyword: Keyword };
-}
+export type KeywordResponse = ApiItemResponse<Keyword>;
 
 export const keywordsService = {
   getAll: (params?: { categoryId?: string; isEnabled?: boolean }) =>
@@ -39,5 +34,8 @@ export const keywordsService = {
     apiRequest<KeywordResponse>(`/keywords/${id}/toggle`, { method: "PATCH" }),
 
   delete: (id: string) =>
-    apiRequest<{ success: boolean; message: string; data: { deletedKeyword: { id: string; word: string } } }>(`/keywords/${id}`, { method: "DELETE" }),
+    apiRequest<{ success: boolean; message: string; data: { item: { id: string; word: string } } }>(
+      `/keywords/${id}`,
+      { method: "DELETE" },
+    ),
 };

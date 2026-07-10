@@ -1,5 +1,6 @@
 import { apiRequest, uploadRequest } from "./api";
-import type { Pagination } from "./categories";
+import type { ApiItemResponse, ApiListResponse } from "@/services/api-types";
+import { getItemsFromListResponse } from "@/services/api-types";
 
 /** Category embedded on a site list item (no id; displayName may be omitted). */
 export interface SiteCategory {
@@ -22,23 +23,9 @@ export function siteCategoryLabel(category: SiteCategory | null | undefined): st
   return category.displayName || category.name || "—";
 }
 
-/** GET /sites list payload — `{ sites, pagination }`. */
-export interface SitesListData {
-  sites: Site[];
-  pagination: Pagination;
-}
+export type SitesResponse = ApiListResponse<Site>;
 
-export interface SitesResponse {
-  success?: boolean;
-  message?: string;
-  data: SitesListData;
-}
-
-export interface SiteResponse {
-  success: boolean;
-  message: string;
-  data: { site: Site };
-}
+export type SiteResponse = ApiItemResponse<Site>;
 
 export interface SiteCreateBody {
   name: string;
@@ -55,23 +42,8 @@ export interface SiteUpdateBody {
 }
 
 export function getSitesListFromResponse(responseBody: unknown): Site[] {
-  if (!responseBody) return [];
-  if (Array.isArray(responseBody)) return responseBody as Site[];
-
-  if (typeof responseBody !== "object") return [];
-  const payload = responseBody as Record<string, unknown>;
-
-  const dataPayload = payload.data;
-  if (Array.isArray(dataPayload)) return dataPayload as Site[];
-
-  if (dataPayload && typeof dataPayload === "object") {
-    const sites = (dataPayload as SitesListData).sites;
-    if (Array.isArray(sites)) return sites;
-  }
-
-  if (Array.isArray(payload.sites)) return payload.sites as Site[];
-
-  return [];
+  if (!responseBody || typeof responseBody !== "object") return [];
+  return getItemsFromListResponse(responseBody as SitesResponse);
 }
 
 export const sitesService = {

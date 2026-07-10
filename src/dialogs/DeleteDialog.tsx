@@ -7,6 +7,7 @@ interface DeleteDialogProps {
   onConfirm: () => void;
   title?: string;
   description?: string;
+  confirmLabel?: string;
 }
 
 export default function DeleteDialog({
@@ -15,6 +16,7 @@ export default function DeleteDialog({
   onConfirm,
   title = "Delete",
   description = "Are you sure you want to delete this item?",
+  confirmLabel = "Confirm Delete",
 }: DeleteDialogProps) {
   return (
     <BaseDialog
@@ -30,7 +32,7 @@ export default function DeleteDialog({
         <div className="w-full">
           <DialogActionButtons
             onCancel={onClose}
-            submitLabel="Confirm Delete"
+            submitLabel={confirmLabel}
             onSubmit={onConfirm}
           />
         </div>

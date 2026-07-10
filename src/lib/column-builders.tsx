@@ -78,6 +78,8 @@ export const actionsColumn = (
   config: {
     onEdit?: (item: any) => void;
     onDelete?: (item: any) => void;
+    onApprove?: (item: any) => void;
+    onReject?: (item: any) => void;
   },
 ) => ({
   key: "actions",
@@ -87,6 +89,8 @@ export const actionsColumn = (
     <TableActions
       onEdit={config.onEdit ? () => config.onEdit!(item) : undefined}
       onDelete={config.onDelete ? () => config.onDelete!(item) : undefined}
+      onApprove={config.onApprove ? () => config.onApprove!(item) : undefined}
+      onReject={config.onReject ? () => config.onReject!(item) : undefined}
     />
   ),
 });

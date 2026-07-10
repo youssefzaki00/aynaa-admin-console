@@ -1,4 +1,6 @@
 import { apiRequest } from "./api";
+import type { ApiItemResponse, ApiListResponse } from "@/services/api-types";
+import { getItemsFromListResponse } from "@/services/api-types";
 
 export interface App {
   id: string;
@@ -9,28 +11,14 @@ export interface App {
   updatedAt: string;
 }
 
-export interface AppsResponse {
-  success: boolean;
-  message?: string;
-  data: {
-    apps: App[];
-  };
-}
+export type AppsResponse = ApiListResponse<App>;
 
-export interface AppResponse {
-  success: boolean;
-  message: string;
-  data: { app: App };
-}
+export type AppResponse = ApiItemResponse<App>;
 
-export interface DeletedAppResponse {
-  success: boolean;
-  message: string;
-  data: { deletedApp: { id: string; packageName: string } };
-}
+export type DeletedAppResponse = ApiItemResponse<{ id: string; packageName: string }>;
 
 export function getAppsList(apiResponse: AppsResponse | undefined): App[] {
-  return apiResponse?.data?.apps ?? [];
+  return getItemsFromListResponse(apiResponse);
 }
 
 export const appsService = {

@@ -3,13 +3,13 @@ import { useKeywords, useCreateKeyword, useUpdateKeyword, useToggleKeyword, useD
 import { useKeywordCustomSetup } from "@/hooks/use-keyword-setup";
 import { getKeywordColumns } from "@/columns/keywords.columns";
 import { Ban } from "lucide-react";
-import type { Keyword } from "@/services/keywords";
+import { getKeywordsList, type Keyword } from "@/services/keywords";
 
 const config: PageConfig<Keyword> = {
   useQuery: (params) => useKeywords(params),
   mapQueryParams: () => ({}),
   listMode: "full",
-  dataPath: (raw) => raw?.data?.keywords ?? [],
+  dataPath: (raw) => getKeywordsList(raw),
   useCreate: useCreateKeyword,
   useUpdate: useUpdateKeyword,
   useDelete: useDeleteKeyword,

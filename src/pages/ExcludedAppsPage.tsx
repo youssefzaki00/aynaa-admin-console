@@ -8,13 +8,13 @@ import {
 import { getExcludedAppsColumns } from "@/columns/excluded-apps.columns";
 import { useExcludedAppCustomSetup } from "@/hooks/use-excluded-app-setup";
 import { ShieldOff } from "lucide-react";
-import type { ExcludedApp } from "@/services/excluded-apps";
+import { getExcludedAppsList, type ExcludedApp } from "@/services/excluded-apps";
 
 const config: PageConfig<ExcludedApp> = {
   useQuery: (params) => useExcludedApps(params),
   mapQueryParams: (_page, search) => ({ search: search || undefined }),
   listMode: "full",
-  dataPath: (raw) => raw?.data?.excludedApps ?? [],
+  dataPath: (raw) => getExcludedAppsList(raw),
   useCreate: useCreateExcludedApp,
   useUpdate: useUpdateExcludedApp,
   useDelete: useDeleteExcludedApp,
