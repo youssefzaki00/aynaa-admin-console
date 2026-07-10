@@ -22,7 +22,7 @@ export function getAppsList(apiResponse: AppsResponse | undefined): App[] {
 }
 
 export const appsService = {
-  getAll: (params?: { lastSync?: string }) =>
+  getAll: (params?: { lastSync?: string; search?: string }) =>
     apiRequest<AppsResponse>("/apps", {
       params: params as Record<string, string | number | boolean | undefined>,
     }),

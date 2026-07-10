@@ -39,7 +39,7 @@ export interface PageConfig<TRow extends { id: string }> {
   useDelete?: () => UseMutationResult<any, any, any>;
   useToggle?: () => UseMutationResult<any, any, any> | undefined;
 
-  dialogId: DialogName;
+  dialogId?: DialogName;
   messages: CrudMessages;
   columnGenerator: (handlers: any) => any[];
   filterDefaults: Record<string, string>;

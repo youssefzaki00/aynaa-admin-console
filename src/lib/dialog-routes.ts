@@ -4,7 +4,6 @@ import {
   keywordFormConfig,
   siteFormConfig,
   appFormConfig,
-  requestFormConfig,
 } from "@/forms";
 import type { DialogName } from "./dialog-types";
 
@@ -71,15 +70,6 @@ export const dialogRoutes: Record<DialogName, DialogRoute> = {
     component: "form",
     getProps: (params) => ({
       config: appFormConfig,
-      editItem: params.editItem ?? null,
-      onSave: params.onSave ?? (() => {}),
-    }),
-  },
-
-  "request-form": {
-    component: "form",
-    getProps: (params) => ({
-      config: requestFormConfig,
       editItem: params.editItem ?? null,
       onSave: params.onSave ?? (() => {}),
     }),

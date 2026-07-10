@@ -12,7 +12,7 @@ import { Smartphone } from "lucide-react";
 
 const config: PageConfig<App> = {
   useQuery: (params) => useApps(params),
-  mapQueryParams: () => ({}),
+  mapQueryParams: (_page, search) => ({ search: search || undefined }),
   listMode: "full",
   dataPath: (raw) => getAppsList(raw),
   useCreate: useCreateApp,
@@ -27,7 +27,6 @@ const config: PageConfig<App> = {
   columnGenerator: getAppsColumns,
   filterDefaults: {},
   useCustomSetup: useAppsCustomSetup,
-  disableSearch: true,
 };
 
 export default function AppsPage() {

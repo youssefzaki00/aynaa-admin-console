@@ -1,10 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { keywordsService } from "@/services/keywords";
 
-export function useKeywords(params?: { categoryId?: string; isEnabled?: boolean }) {
+export function useKeywords(params?: { categoryId?: string; isEnabled?: boolean; search?: string }) {
   return useQuery({
     queryKey: ["keywords", params],
     queryFn: () => keywordsService.getAll(params),
+    placeholderData: keepPreviousData,
   });
 }
 

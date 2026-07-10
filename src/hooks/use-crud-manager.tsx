@@ -38,7 +38,7 @@ interface UseCrudManagerProps<T, TPayload> {
     pagination?: Pagination;
   };
   mutations: CrudMutations<T, TPayload>;
-  dialogId: DialogName;
+  dialogId?: DialogName;
   messages: CrudMessages;
   columnGenerator: (handlers: any) => any[];
   filtersHook?: FiltersHook;
@@ -137,12 +137,14 @@ export function useCrudManager<T extends { id: string }, TPayload>({
     () =>
       columnGenerator({
         onToggle: handleToggle,
-        onEdit: (item: T) =>
-          openDialog(dialogId, {
-            editItem: transformEditData ? transformEditData(item) : item,
-            onSave: (p: TPayload) => handleSave(item, p),
-            ...extraDialogParams,
-          }),
+        onEdit: dialogId
+          ? (item: T) =>
+              openDialog(dialogId, {
+                editItem: transformEditData ? transformEditData(item) : item,
+                onSave: (p: TPayload) => handleSave(item, p),
+                ...extraDialogParams,
+              })
+          : undefined,
         onDelete: (item: T) =>
           openDialog("delete", {
             title: "Delete",
@@ -167,11 +169,13 @@ export function useCrudManager<T extends { id: string }, TPayload>({
   );
 
   const onAdd = useCallback(
-    () =>
+    () => {
+      if (!dialogId) return;
       openDialog(dialogId, {
         onSave: (p: TPayload) => handleSave(null, p),
         ...extraDialogParams,
-      }),
+      });
+    },
     [openDialog, dialogId, handleSave, extraDialogParams],
   );
 

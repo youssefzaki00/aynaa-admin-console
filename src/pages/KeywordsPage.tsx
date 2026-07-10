@@ -7,7 +7,7 @@ import { getKeywordsList, type Keyword } from "@/services/keywords";
 
 const config: PageConfig<Keyword> = {
   useQuery: (params) => useKeywords(params),
-  mapQueryParams: () => ({}),
+  mapQueryParams: (_page, search) => ({ search: search || undefined }),
   listMode: "full",
   dataPath: (raw) => getKeywordsList(raw),
   useCreate: useCreateKeyword,
@@ -24,7 +24,6 @@ const config: PageConfig<Keyword> = {
   columnGenerator: getKeywordColumns,
   filterDefaults: {},
   useCustomSetup: useKeywordCustomSetup,
-  disableSearch: true,
 };
 
 export default function KeywordsPage() {

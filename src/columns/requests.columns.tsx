@@ -1,32 +1,22 @@
-import { Check, X } from "lucide-react";
+import { Check, Eye, MessageSquare, X } from "lucide-react";
 import { textColumn } from "@/lib/column-builders";
-import { Badge } from "@/ui/badge";
+import { formatAbsoluteTime, formatRelativeTime } from "@/lib/utils";
 import { Button } from "@/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/ui/tooltip";
 import StatusBadge from "@/components/StatusBadge";
 import type { AppRequest } from "@/services/requests";
 
-function statusVariant(status: string): "pending" | "approved" | "declined" | "rejected" | "inactive" {
+function statusVariant(status: string): "pending" | "approved" | "rejected" | "inactive" {
   switch (status?.toUpperCase()) {
     case "PENDING":
       return "pending";
     case "APPROVED":
       return "approved";
-    case "DECLINED":
-      return "declined";
     case "REJECTED":
       return "rejected";
     default:
       return "inactive";
   }
-}
-
-function formatType(type: string) {
-  if (!type) return "—";
-  return type
-    .toLowerCase()
-    .split(/[_\s]+/)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
 }
 
 export type RequestsColumnsHandlers = {
@@ -40,13 +30,53 @@ export function getRequestsColumns(handlers: RequestsColumnsHandlers) {
   return [
     textColumn("User ID", (r) => r.userId || "—", "text-muted-foreground text-xs font-mono max-w-xs", "userId"),
     {
-      key: "type",
-      label: "Type",
-      render: (item: AppRequest) => (
-        <Badge variant="secondary" className="font-medium">
-          {formatType(item.type)}
-        </Badge>
-      ),
+      key: "reason",
+      label: "Reason",
+      render: (item: AppRequest) =>
+        item.reason ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 gap-1.5 text-xs border-dashed border-border/70 text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5"
+                aria-label="View reason"
+              >
+                <Eye className="h-3.5 w-3.5" />
+                View
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              align="start"
+              sideOffset={8}
+              className="p-0 max-w-md w-[min(28rem,calc(100vw-2rem))] overflow-hidden rounded-lg border-border/60 shadow-lg"
+            >
+              <div className="flex items-center gap-2 border-b border-border/60 bg-muted/50 px-4 py-2.5">
+                <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <MessageSquare className="h-3.5 w-3.5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-foreground">Uninstall reason</p>
+                  <p className="text-[11px] text-muted-foreground">Submitted by user</p>
+                </div>
+              </div>
+              <div className="max-h-64 overflow-y-auto px-4 py-3.5 bg-card">
+                <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap break-words">
+                  {item.reason}
+                </p>
+              </div>
+              <div className="border-t border-border/60 bg-muted/30 px-4 py-2">
+                <p className="text-[11px] text-muted-foreground tabular-nums">
+                  {item.reason.length} / 2000 characters
+                </p>
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <span className="text-muted-foreground text-xs">—</span>
+        ),
     },
     {
       key: "status",
@@ -59,15 +89,27 @@ export function getRequestsColumns(handlers: RequestsColumnsHandlers) {
       ),
     },
     {
-      key: "message",
-      label: "Message",
+      key: "createdAt",
+      label: "Created",
       render: (item: AppRequest) => (
-        <p
-          className="text-muted-foreground text-xs max-w-[240px] truncate"
-          title={item.message || undefined}
+        <span
+          className="text-muted-foreground text-xs whitespace-nowrap"
+          title={formatAbsoluteTime(item.createdAt)}
         >
-          {item.message || "—"}
-        </p>
+          {formatRelativeTime(item.createdAt)}
+        </span>
+      ),
+    },
+    {
+      key: "updatedAt",
+      label: "Updated",
+      render: (item: AppRequest) => (
+        <span
+          className="text-muted-foreground text-xs whitespace-nowrap"
+          title={formatAbsoluteTime(item.updatedAt)}
+        >
+          {formatRelativeTime(item.updatedAt)}
+        </span>
       ),
     },
     {
@@ -75,7 +117,7 @@ export function getRequestsColumns(handlers: RequestsColumnsHandlers) {
       label: "Actions",
       align: "center" as const,
       render: (item: AppRequest) => {
-        const isPending = item.status?.toUpperCase() === "PENDING";
+        const isPending = item.status === "PENDING";
         if (!isPending) {
           return (
             <span className="text-muted-foreground/60 text-xs italic">Reviewed</span>

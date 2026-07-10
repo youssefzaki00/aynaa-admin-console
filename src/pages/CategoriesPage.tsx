@@ -27,7 +27,6 @@ const config: PageConfig<Category> = {
   },
   columnGenerator: getCategoryColumns,
   filterDefaults: {},
-  disableSearch: true,
 };
 
 export default function CategoriesPage() {

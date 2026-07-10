@@ -2,8 +2,8 @@ import { useState } from "react";
 import { CheckCircle2, XCircle } from "lucide-react";
 import BaseDialog from "@/components/BaseDialog";
 import DialogActionButtons from "@/components/DialogActionButtons";
-import { Badge } from "@/ui/badge";
-import { cn } from "@/lib/utils";
+import StatusBadge from "@/components/StatusBadge";
+import { cn, formatAbsoluteTime, formatRelativeTime } from "@/lib/utils";
 import type { AppRequest } from "@/services/requests";
 
 export type RequestReviewVariant = "approve" | "reject";
@@ -18,8 +18,8 @@ interface RequestReviewDialogProps {
 
 const variantConfig = {
   approve: {
-    title: "Approve request",
-    description: "This will mark the request as approved. You can’t undo this action.",
+    title: "Approve uninstall request",
+    description: "This will mark the uninstall request as approved. You can’t undo this action.",
     confirmLabel: "Approve",
     loadingLabel: "Approving...",
     submitVariant: "success" as const,
@@ -27,8 +27,8 @@ const variantConfig = {
     iconClass: "text-success bg-success/10",
   },
   reject: {
-    title: "Reject request",
-    description: "This will mark the request as rejected. You can’t undo this action.",
+    title: "Reject uninstall request",
+    description: "This will mark the uninstall request as rejected. You can’t undo this action.",
     confirmLabel: "Reject",
     loadingLabel: "Rejecting...",
     submitVariant: "destructive" as const,
@@ -46,6 +46,19 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
       <div className="text-sm text-foreground break-words">{children}</div>
     </div>
   );
+}
+
+function statusVariant(status: string): "pending" | "approved" | "rejected" | "inactive" {
+  switch (status?.toUpperCase()) {
+    case "PENDING":
+      return "pending";
+    case "APPROVED":
+      return "approved";
+    case "REJECTED":
+      return "rejected";
+    default:
+      return "inactive";
+  }
 }
 
 export default function RequestReviewDialog({
@@ -88,25 +101,30 @@ export default function RequestReviewDialog({
           </p>
         </div>
 
-        <div className="rounded-lg border border-border/60 bg-muted/30 p-4 space-y-3">
-          <div className="flex items-center justify-between gap-3">
-            <DetailRow label="Type">
-              <Badge variant="secondary" className="font-medium">
-                {request.type || "—"}
-              </Badge>
+        <div className="rounded-lg border border-border/60 bg-muted/30 p-4 space-y-4">
+          <DetailRow label="Reason">
+            <p className="text-foreground leading-relaxed">{request.reason || "—"}</p>
+          </DetailRow>
+
+          <div className="flex items-start justify-between gap-4">
+            <DetailRow label="User ID">
+              <span className="font-mono text-xs">{request.userId || "—"}</span>
             </DetailRow>
             <DetailRow label="Status">
-              <span className="text-warning font-medium">{request.status}</span>
+              <StatusBadge variant={statusVariant(request.status)}>
+                {request.status}
+              </StatusBadge>
             </DetailRow>
           </div>
-          <DetailRow label="User ID">
-            <span className="font-mono text-xs">{request.userId || "—"}</span>
+
+          <DetailRow label="Submitted">
+            <span
+              className="text-muted-foreground"
+              title={formatAbsoluteTime(request.createdAt)}
+            >
+              {formatRelativeTime(request.createdAt)}
+            </span>
           </DetailRow>
-          {request.message ? (
-            <DetailRow label="Message">
-              <span className="text-muted-foreground">{request.message}</span>
-            </DetailRow>
-          ) : null}
         </div>
 
         <DialogActionButtons

@@ -53,7 +53,7 @@ export default function DataPageLayout<T extends { id: string }>({
   const isServerSide = !!pagination && !!onPageChange;
 
   return (
-    <PageWrapper isLoading={isLoading} error={error}>
+    <PageWrapper isLoading={isLoading && data.length === 0} error={error}>
       <DataTable
         title={title}
         description={description}

@@ -38,3 +38,40 @@ export const handleCopy = async (text: string) => {
     toast.error("Failed to copy");
   }
 };
+
+const relativeTimeFormatter = new Intl.RelativeTimeFormat(undefined, { numeric: "auto" });
+
+const RELATIVE_TIME_UNITS: { unit: Intl.RelativeTimeFormatUnit; ms: number }[] = [
+  { unit: "year", ms: 1000 * 60 * 60 * 24 * 365 },
+  { unit: "month", ms: 1000 * 60 * 60 * 24 * 30 },
+  { unit: "week", ms: 1000 * 60 * 60 * 24 * 7 },
+  { unit: "day", ms: 1000 * 60 * 60 * 24 },
+  { unit: "hour", ms: 1000 * 60 * 60 },
+  { unit: "minute", ms: 1000 * 60 },
+  { unit: "second", ms: 1000 },
+];
+
+export function formatRelativeTime(isoDate: string | undefined | null): string {
+  if (!isoDate) return "—";
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) return "—";
+
+  const diffMs = date.getTime() - Date.now();
+  const absDiff = Math.abs(diffMs);
+
+  for (const { unit, ms } of RELATIVE_TIME_UNITS) {
+    if (absDiff >= ms || unit === "second") {
+      const value = Math.round(diffMs / ms);
+      return relativeTimeFormatter.format(value, unit);
+    }
+  }
+
+  return "—";
+}
+
+export function formatAbsoluteTime(isoDate: string | undefined | null): string {
+  if (!isoDate) return "";
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString();
+}

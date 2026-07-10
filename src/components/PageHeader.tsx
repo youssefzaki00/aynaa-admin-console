@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { Search, Plus } from "lucide-react";
-import { Input } from "@/ui/input";
+import { useState, useEffect, useCallback } from "react";
+import { Plus } from "lucide-react";
 import { Button } from "@/ui/button";
+import SearchInput from "@/components/SearchInput";
 import { cn } from "@/lib/utils";
 
 interface PageHeaderProps {
@@ -47,6 +47,16 @@ export default function PageHeader({
     return () => clearTimeout(timeout);
   }, [localSearch, onSearchChange, searchValue]);
 
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setLocalSearch(value);
+      if (value === "") {
+        onSearchChange?.("");
+      }
+    },
+    [onSearchChange],
+  );
+
   return (
     <header className={cn("flex flex-col sm:flex-row sm:items-center gap-4 mb-8 p-6 bg-card rounded-xl border border-border", className)}>
       <div className="flex items-center gap-4 shrink-0">
@@ -73,16 +83,12 @@ export default function PageHeader({
       {(onSearchChange || filterPanel) && (
         <div className="flex items-center gap-2 flex-1 min-w-0 max-w-md">
           {onSearchChange && (
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-              <Input
-                type="search"
-                placeholder={searchPlaceholder}
-                value={localSearch}
-                onChange={(e) => setLocalSearch(e.target.value)}
-                className="pl-9 bg-background/50 border-border/50"
-              />
-            </div>
+            <SearchInput
+              className="flex-1"
+              placeholder={searchPlaceholder}
+              value={localSearch}
+              onChange={handleSearchChange}
+            />
           )}
           {filterPanel}
         </div>

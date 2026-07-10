@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { categoriesService } from "@/services/categories";
 
 export function useCategories(
@@ -14,6 +14,7 @@ export function useCategories(
     queryKey: ["categories", params],
     queryFn: () => categoriesService.getAll(params),
     enabled: options?.enabled ?? true,
+    placeholderData: keepPreviousData,
   });
 }
 

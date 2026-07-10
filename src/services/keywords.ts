@@ -21,7 +21,7 @@ export function getKeywordsList(apiResponse: KeywordsResponse | undefined): Keyw
 export type KeywordResponse = ApiItemResponse<Keyword>;
 
 export const keywordsService = {
-  getAll: (params?: { categoryId?: string; isEnabled?: boolean }) =>
+  getAll: (params?: { categoryId?: string; isEnabled?: boolean; search?: string }) =>
     apiRequest<KeywordsResponse>("/keywords", { params: params as Record<string, string | number | boolean | undefined> }),
 
   create: (body: { word: string; categoryId: string }) =>

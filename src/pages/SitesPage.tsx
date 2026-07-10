@@ -9,7 +9,7 @@ import { useDialog } from "@/lib/dialog-context";
 
 const config: PageConfig<Site> = {
   useQuery: (params) => useSites(params),
-  mapQueryParams: () => ({}),
+  mapQueryParams: (_page, search) => ({ search: search || undefined }),
   listMode: "full",
   dataPath: (response) => getSitesListFromResponse(response),
   useCreate: useCreateSite,
@@ -24,7 +24,6 @@ const config: PageConfig<Site> = {
   columnGenerator: getSiteColumns,
   filterDefaults: {},
   useCustomSetup: useSiteCustomSetup,
-  disableSearch: true,
 };
 
 export default function SitesPage() {

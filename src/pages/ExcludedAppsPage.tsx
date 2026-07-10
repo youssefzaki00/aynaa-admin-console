@@ -27,7 +27,6 @@ const config: PageConfig<ExcludedApp> = {
   columnGenerator: getExcludedAppsColumns,
   filterDefaults: {},
   useCustomSetup: useExcludedAppCustomSetup,
-  disableSearch: true,
 };
 
 export default function ExcludedAppsPage() {

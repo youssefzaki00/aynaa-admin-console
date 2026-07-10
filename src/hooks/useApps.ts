@@ -1,10 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { appsService } from "@/services/apps";
 
-export function useApps(params?: { lastSync?: string }) {
+export function useApps(params?: { lastSync?: string; search?: string }) {
   return useQuery({
     queryKey: ["apps", params],
     queryFn: () => appsService.getAll(params),
+    placeholderData: keepPreviousData,
   });
 }
 

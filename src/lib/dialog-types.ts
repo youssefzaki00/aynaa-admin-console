@@ -9,7 +9,6 @@ export interface DialogParamsMap {
   "site-form": FormDialogParams;
   "excluded-app-form": FormDialogParams;
   "app-form": FormDialogParams;
-  "request-form": FormDialogParams;
   "request-review": {
     variant: "approve" | "reject";
     request: any;

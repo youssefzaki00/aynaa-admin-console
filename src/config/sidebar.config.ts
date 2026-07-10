@@ -7,7 +7,7 @@ const navItems = [
   { to: "/sites", label: "Sites", icon: Globe },
   { to: "/excluded-apps", label: "Excluded Apps", icon: ShieldOff },
   { to: "/apps", label: "Apps", icon: Smartphone },
-  { to: "/requests", label: "Requests", icon: Inbox },
+  { to: "/requests", label: "Uninstall Requests", icon: Inbox },
 ];
 
 export default navItems;

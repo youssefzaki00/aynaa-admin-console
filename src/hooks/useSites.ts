@@ -1,10 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { sitesService, type SiteCreateBody, type SiteUpdateBody } from "@/services/sites";
 
 export function useSites(params?: { search?: string }) {
   return useQuery({
     queryKey: ["sites", params],
     queryFn: () => sitesService.getAll(params),
+    placeholderData: keepPreviousData,
   });
 }
 

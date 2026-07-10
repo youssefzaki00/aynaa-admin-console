@@ -1,19 +1,23 @@
 import { apiRequest } from "./api";
-import type { ApiItemResponse, ApiListResponse } from "@/services/api-types";
+import type { ApiListResponse } from "@/services/api-types";
 import { getItemsFromListResponse } from "@/services/api-types";
 
-export type RequestStatus = "PENDING" | "APPROVED" | "DECLINED" | "REJECTED";
-export type RequestType = "UNINSTALL" | string;
+export type RequestStatus = "PENDING" | "APPROVED" | "REJECTED";
 
 export interface AppRequest {
   id: string;
   userId: string;
-  type: RequestType;
-  status: RequestStatus | string;
-  message: string;
-  details: Record<string, unknown>;
+  reason: string;
+  status: RequestStatus;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface RequestsListParams {
+  userId?: string;
+  status?: RequestStatus;
+  page?: number;
+  limit?: number;
 }
 
 export interface RequestsPagination {
@@ -29,18 +33,21 @@ export interface RequestsResponse extends ApiListResponse<AppRequest> {
   };
 }
 
-export type UpdateRequestResponse = ApiItemResponse<AppRequest>;
+export interface UpdateRequestResponse {
+  success: boolean;
+  data: { request: AppRequest };
+}
 
 export function getRequestsList(apiResponse: RequestsResponse | undefined): AppRequest[] {
   return getItemsFromListResponse(apiResponse);
 }
 
 export const requestsService = {
-  getAll: (params?: { type?: string; page?: number; limit?: number }) =>
+  getAll: (params?: RequestsListParams) =>
     apiRequest<RequestsResponse>("/requests", {
       params: params as Record<string, string | number | boolean | undefined>,
     }),
 
-  update: (id: string, body: { status?: RequestStatus; message?: string }) =>
+  update: (id: string, body: { status: RequestStatus }) =>
     apiRequest<UpdateRequestResponse>(`/requests/${id}`, { method: "PATCH", body }),
 };
