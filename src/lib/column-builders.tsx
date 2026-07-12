@@ -2,6 +2,7 @@ import { Badge } from "@/ui/badge";
 import { Switch } from "@/ui/switch";
 import { cn } from "@/lib/utils";
 import TableActions from "@/components/TableActions";
+import ViewTooltip, { type ViewTooltipProps } from "@/components/ViewTooltip";
 import type { DialogName, DialogParamsMap } from "./dialog-types";
 
 export type OpenDialogFn = <K extends DialogName>(
@@ -23,6 +24,19 @@ export const deleteAction = (
       data: item,
     });
 };
+
+export const viewTooltipColumn = <T,>(
+  key: string,
+  label: string,
+  getValue: (item: T) => string | undefined,
+  tooltip: Omit<ViewTooltipProps, "value">,
+) => ({
+  key,
+  label,
+  render: (item: T) => (
+    <ViewTooltip value={getValue(item)} {...tooltip} />
+  ),
+});
 
 export const textColumn = (
   label: string,

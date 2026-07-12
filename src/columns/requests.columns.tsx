@@ -1,8 +1,7 @@
-import { Check, Eye, MessageSquare, X } from "lucide-react";
-import { textColumn } from "@/lib/column-builders";
+import { Check, Fingerprint, Hash, MessageSquare, User, X } from "lucide-react";
+import { viewTooltipColumn } from "@/lib/column-builders";
 import { formatAbsoluteTime, formatRelativeTime } from "@/lib/utils";
 import { Button } from "@/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/ui/tooltip";
 import StatusBadge from "@/components/StatusBadge";
 import type { AppRequest } from "@/services/requests";
 
@@ -28,56 +27,33 @@ export function getRequestsColumns(handlers: RequestsColumnsHandlers) {
   const { onApprove, onReject } = handlers;
 
   return [
-    textColumn("User ID", (r) => r.userId || "—", "text-muted-foreground text-xs font-mono max-w-xs", "userId"),
-    {
-      key: "reason",
-      label: "Reason",
-      render: (item: AppRequest) =>
-        item.reason ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="h-7 gap-1.5 text-xs border-dashed border-border/70 text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5"
-                aria-label="View reason"
-              >
-                <Eye className="h-3.5 w-3.5" />
-                View
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              align="start"
-              sideOffset={8}
-              className="p-0 max-w-md w-[min(28rem,calc(100vw-2rem))] overflow-hidden rounded-lg border-border/60 shadow-lg"
-            >
-              <div className="flex items-center gap-2 border-b border-border/60 bg-muted/50 px-4 py-2.5">
-                <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
-                  <MessageSquare className="h-3.5 w-3.5" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-semibold text-foreground">Uninstall reason</p>
-                  <p className="text-[11px] text-muted-foreground">Submitted by user</p>
-                </div>
-              </div>
-              <div className="max-h-64 overflow-y-auto px-4 py-3.5 bg-card">
-                <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap break-words">
-                  {item.reason}
-                </p>
-              </div>
-              <div className="border-t border-border/60 bg-muted/30 px-4 py-2">
-                <p className="text-[11px] text-muted-foreground tabular-nums">
-                  {item.reason.length} / 2000 characters
-                </p>
-              </div>
-            </TooltipContent>
-          </Tooltip>
-        ) : (
-          <span className="text-muted-foreground text-xs">—</span>
-        ),
-    },
+    viewTooltipColumn<AppRequest>("id", "ID", (r) => r.id, {
+      triggerLabel: "ID",
+      triggerIcon: Hash,
+      headerIcon: Fingerprint,
+      title: "Request ID",
+      subtitle: "Unique identifier for this request",
+      footer: (value) => `${value.length} characters`,
+      ariaLabel: "View request ID",
+      valueClassName: "break-all font-mono",
+    }),
+    viewTooltipColumn<AppRequest>("userId", "User ID", (r) => r.userId, {
+      triggerLabel: "User",
+      triggerIcon: User,
+      title: "User ID",
+      subtitle: "Account that submitted this request",
+      footer: (value) => `${value.length} characters`,
+      ariaLabel: "View user ID",
+      valueClassName: "break-all font-mono",
+    }),
+    viewTooltipColumn<AppRequest>("reason", "Reason", (r) => r.reason, {
+      triggerLabel: "Reason",
+      triggerIcon: MessageSquare,
+      title: "Uninstall reason",
+      subtitle: "Feedback provided by the user",
+      footer: (value) => `${value.length} / 2000 characters`,
+      ariaLabel: "View uninstall reason",
+    }),
     {
       key: "status",
       label: "Status",
