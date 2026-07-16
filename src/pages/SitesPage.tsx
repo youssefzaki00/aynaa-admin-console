@@ -1,18 +1,16 @@
 import CreatePage, { type PageConfig } from "@/components/CreatePage";
-import { useSites, useCreateSite, useUpdateSite, useDeleteSite } from "@/hooks/useSites";
-import { useSiteCustomSetup } from "@/hooks/use-site-setup";
+import { useSites, useUpdateSite, useDeleteSite } from "@/hooks/useSites";
+import { useSiteCustomSetup, useCreateSiteWithHostCheck } from "@/hooks/use-site-setup";
 import { getSiteColumns } from "@/columns/sites.columns";
-import { Globe, Upload } from "lucide-react";
+import { Globe} from "lucide-react";
 import { getSitesListFromResponse, type Site } from "@/services/sites";
-import { Button } from "@/ui/button";
-import { useDialog } from "@/lib/dialog-context";
 
 const config: PageConfig<Site> = {
   useQuery: (params) => useSites(params),
   mapQueryParams: (_page, search) => ({ search: search || undefined }),
   listMode: "full",
   dataPath: (response) => getSitesListFromResponse(response),
-  useCreate: useCreateSite,
+  useCreate: useCreateSiteWithHostCheck,
   useUpdate: useUpdateSite,
   useDelete: useDeleteSite,
   dialogId: "site-form",
@@ -27,8 +25,6 @@ const config: PageConfig<Site> = {
 };
 
 export default function SitesPage() {
-  const { openDialog } = useDialog();
-
   return (
     <CreatePage
       config={config}
